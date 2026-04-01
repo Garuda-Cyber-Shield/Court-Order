@@ -160,6 +160,14 @@ const db = {
     await writeUsers(users);
     return users[idx];
   },
+
+  async deleteUser(id) {
+    const users = await readUsers();
+    const filtered = users.filter(u => u.id !== id);
+    if (filtered.length === users.length) return false;
+    await writeUsers(filtered);
+    return true;
+  },
 };
 
 export default db;

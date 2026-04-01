@@ -189,14 +189,15 @@ app.post('/api/admin/promote/:id', authenticateToken, requireAdmin, async (req, 
   }
 });
 
-// DELETE /api/admin/delete/:id — bans user
+// DELETE /api/admin/delete/:id — permanently deletes user
 app.delete('/api/admin/delete/:id', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const target = await db.findById(Number(req.params.id));
     if (!target) return res.status(404).json({ error: 'User not found.' });
     if (target.is_default_owner) return res.status(403).json({ error: 'Default owner cannot be deleted.' });
-    await db.updateUser(target.id, { status: 'banned' });
-    return res.json({ message: 'User has been banned.' });
+    
+    await db.deleteUser(target.id);
+    return res.json({ message: 'User has been permanently deleted.' });
   } catch (err) {
     console.error('Delete error:', err);
     return res.status(500).json({ error: 'Internal server error.' });
