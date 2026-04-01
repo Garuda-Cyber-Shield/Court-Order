@@ -16,6 +16,15 @@ app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 
 // ─── Auth Middleware ─────────────────────────────
+let isSeeded = false;
+app.use(async (req, res, next) => {
+  if (!isSeeded && req.path.startsWith('/api')) {
+    await seedDefaultOwner();
+    isSeeded = true;
+  }
+  next();
+});
+
 function authenticateToken(req, res, next) {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
