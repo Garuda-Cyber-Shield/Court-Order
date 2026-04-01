@@ -149,7 +149,7 @@ const PlexusBackground: React.FC = () => {
   }, []);
 
   return (
-    <div className="fixed inset-0 -z-20 bg-slate-950 overflow-hidden">
+    <div className="fixed inset-0 -z-20 bg-slate-950 overflow-hidden print:hidden">
       {/* Deep Cyber Gradient */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(2,15,30,1)_0%,rgba(2,6,23,1)_100%)] opacity-100" />
       

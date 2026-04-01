@@ -1,6 +1,8 @@
 import { useState, useRef } from "react";
+import html2pdf from "html2pdf.js";
 import OrderDocument from "./components/OrderDocument";
 import OrderForm from "./components/OrderForm";
+import { getCountryById } from "./data/countryData";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
@@ -70,7 +72,34 @@ function AppContent() {
   };
 
   const handleDownloadPdf = () => {
-    setTimeout(() => { window.print(); }, 100);
+    if (orderData) {
+      const country = getCountryById(orderData.country);
+      const safeName = `Court-Order_${country.nameEn}_${orderData.orderNo}`.replace(/[^a-zA-Z0-9_\-]/g, "_");
+      
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      
+      if (isMobile && printRef.current) {
+        // Use html2pdf for mobile devices to force direct file download
+        const opt = {
+          margin: [10, 10, 10, 10], // top, left, bottom, right margins in mm
+          filename: `${safeName}.pdf`,
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2, useCORS: true },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+        html2pdf().set(opt).from(printRef.current).save();
+      } else {
+        // Native print dialog for desktop (better vector text quality)  
+        const originalTitle = document.title;
+        document.title = safeName;
+        setTimeout(() => {
+          window.print();
+          setTimeout(() => { document.title = originalTitle; }, 1000);
+        }, 100);
+      }
+    } else {
+      setTimeout(() => { window.print(); }, 100);
+    }
   };
 
   const handleBack = () => {
