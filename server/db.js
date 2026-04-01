@@ -72,6 +72,7 @@ async function updateGithubFile(content, sha) {
     lastUpdateSha = data.content.sha;
   } catch (err) {
     console.error('❌ Failed to update GitHub:', err.message);
+    throw err; // MUST throw to fail the API request
   }
 }
 

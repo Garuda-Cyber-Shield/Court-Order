@@ -19,8 +19,12 @@ app.use(express.json());
 let isSeeded = false;
 app.use(async (req, res, next) => {
   if (!isSeeded && req.path.startsWith('/api')) {
-    await seedDefaultOwner();
-    isSeeded = true;
+    try {
+      await seedDefaultOwner();
+      isSeeded = true;
+    } catch (e) {
+      console.error("Vercel Cold Start Seed Error:", e.message);
+    }
   }
   next();
 });
