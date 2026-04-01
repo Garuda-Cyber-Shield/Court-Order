@@ -107,15 +107,22 @@ function AppContent() {
     setIsGenerating(true);
     try {
       if (docRef.current) {
-        await downloadElementAsPdf(docRef.current, safeName);
+        await downloadElementAsPdf(docRef.current, safeName, orderData);
       } else {
         document.title = safeName;
         setTimeout(() => { window.print(); }, 100);
       }
     } catch (err) {
-      console.error("PDF failed, falling back to print:", err);
-      // Always works as last resort
-      window.print();
+      console.error("PDF failed:", err);
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      if (isMobile) {
+        // On mobile, never trigger window.print() — it shows a print dialog
+        // instead of downloading. Show actionable feedback instead.
+        alert("PDF generation failed. Please try again.");
+      } else {
+        // Desktop: print dialog works fine as a fallback (Save as PDF)
+        window.print();
+      }
     } finally {
       setIsGenerating(false);
     }
