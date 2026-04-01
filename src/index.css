@@ -1,0 +1,103 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+body {
+  font-family: 'Noto Sans Bengali', sans-serif;
+}
+
+@media print {
+  @page {
+    size: A4;
+    margin: 15mm;
+  }
+
+  body {
+    background: white !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .court-order-document {
+    width: 100% !important;
+    max-width: 100% !important;
+    font-size: 12px !important;
+    line-height: 1.3 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .court-order-document table,
+  .court-order-document .print\:break-inside-avoid {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* Keep bordered content blocks intact across pages. */
+  .court-order-document .pdf-section {
+    page-break-inside: avoid !important;
+    break-inside: avoid-page !important;
+  }
+  
+  .print\:hidden {
+    display: none !important;
+  }
+  
+  .print\:shadow-none {
+    box-shadow: none !important;
+  }
+  
+  .print\:rounded-none {
+    border-radius: 0 !important;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Animation for form inputs */
+input:focus, select:focus, textarea:focus {
+  transform: translateY(-1px);
+}
+
+/* Print page settings handled in @media print */
+
+/* Toast animations */
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+.animate-slide-in {
+  animation: slide-in 0.3s ease-out;
+}
+
+.animate-shake {
+  animation: shake 0.3s ease-in-out;
+}
