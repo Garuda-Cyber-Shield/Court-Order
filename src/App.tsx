@@ -1,5 +1,4 @@
 import { useState, useRef } from "react";
-import html2pdf from "html2pdf.js";
 import OrderDocument from "./components/OrderDocument";
 import OrderForm from "./components/OrderForm";
 import { getCountryById } from "./data/countryData";
@@ -41,7 +40,9 @@ function AppContent() {
   const [showPreview, setShowPreview] = useState(false);
   const [currentPage, setCurrentPage] = useState<AppPage>("login");
   const [resetEmail, setResetEmail] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
   const printRef = useRef<HTMLDivElement>(null);
+  const docRef = useRef<HTMLDivElement>(null);
 
   // Determine page based on auth state
   const getEffectivePage = (): AppPage => {
@@ -71,25 +72,30 @@ function AppContent() {
     setShowPreview(true);
   };
 
-  const handleDownloadPdf = () => {
-    if (orderData) {
+  const handleDownloadPdf = async () => {
+    if (orderData && docRef.current) {
       const country = getCountryById(orderData.country);
       const safeName = `Court-Order_${country.nameEn}_${orderData.orderNo}`.replace(/[^a-zA-Z0-9_\-]/g, "_");
-      
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-      
-      if (isMobile && printRef.current) {
-        // Use html2pdf for mobile devices to force direct file download
-        const opt = {
-          margin: [10, 10, 10, 10], // top, left, bottom, right margins in mm
-          filename: `${safeName}.pdf`,
-          image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { scale: 2, useCORS: true },
-          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        };
-        html2pdf().set(opt).from(printRef.current).save();
+
+      if (isMobile) {
+        setIsGenerating(true);
+        try {
+          // html2pdf.js has no official TS types; cast via unknown to avoid errors
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const h2p = ((await import('html2pdf.js')) as any).default ?? (await import('html2pdf.js'));
+          const opt = {
+            margin: [8, 8, 8, 8],
+            filename: `${safeName}.pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+          };
+          await h2p().set(opt).from(docRef.current).save();
+        } finally {
+          setIsGenerating(false);
+        }
       } else {
-        // Native print dialog for desktop (better vector text quality)  
         const originalTitle = document.title;
         document.title = safeName;
         setTimeout(() => {
@@ -256,19 +262,32 @@ function AppContent() {
               </button>
               <button
                 onClick={handleDownloadPdf}
-                className="w-full sm:w-auto px-6 py-3 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-500 transition-all flex items-center justify-center gap-2 shadow-xl"
+                disabled={isGenerating}
+                className="w-full sm:w-auto px-6 py-3 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-500 disabled:opacity-60 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 shadow-xl"
               >
-                <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-                </svg>
-                Download / Print PDF
+                {isGenerating ? (
+                  <>
+                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin flex-shrink-0" />
+                    Generating PDF...
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                    </svg>
+                    Download / Print PDF
+                  </>
+                )}
               </button>
             </div>
 
             {/* Document Preview */}
             <div className="w-full pb-6 print:pb-0">
               <div ref={printRef} className="w-full max-w-[210mm] mx-auto bg-white/5 p-2 sm:p-6 rounded-xl shadow-2xl backdrop-blur-sm print:bg-transparent print:p-0 print:shadow-none">
-                {orderData && <OrderDocument data={orderData} />}
+                {/* docRef wraps only the clean document content for html2pdf (mobile) */}
+                <div ref={docRef}>
+                  {orderData && <OrderDocument data={orderData} />}
+                </div>
               </div>
             </div>
           </div>
