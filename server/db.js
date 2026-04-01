@@ -52,18 +52,20 @@ async function getGithubFile() {
 async function updateGithubFile(content, sha) {
   if (!GITHUB_TOKEN || !GITHUB_REPO) return;
   try {
+    const bodyObj = {
+      message: 'Database Update [skip ci]',
+      content: Buffer.from(content).toString('base64'),
+      branch: GITHUB_BRANCH
+    };
+    if (sha) bodyObj.sha = sha;
+
     const res = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${GITHUB_PATH}`, {
       method: 'PUT',
       headers: {
         'Authorization': `token ${GITHUB_TOKEN}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        message: 'Database Update [skip ci]',
-        content: Buffer.from(content).toString('base64'),
-        sha,
-        branch: GITHUB_BRANCH
-      })
+      body: JSON.stringify(bodyObj)
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.message || 'GitHub Update Failed');
@@ -74,7 +76,7 @@ async function updateGithubFile(content, sha) {
 }
 
 async function readUsers() {
-  if (cachedUsers !== null) return cachedUsers;
+  if (!IS_VERCEL && cachedUsers !== null) return cachedUsers;
 
   if (IS_VERCEL) {
     console.log('☁️ Fetching users from GitHub...');
