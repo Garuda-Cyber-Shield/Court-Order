@@ -1,7 +1,8 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import { getCountryById } from "./data/countryData";
+import { downloadElementAsPdf } from "./utils/downloadPdf";
 import OrderDocument from "./components/OrderDocument";
 import OrderForm from "./components/OrderForm";
-import { getCountryById } from "./data/countryData";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
@@ -27,7 +28,7 @@ export interface OrderData {
   officerDesignation: string;
   department: string;
   priority: "জরুরি" | "সাধারণ" | "অতি জরুরি";
-  courtName: string;
+  courtName: string;           // government heading line 1
   logoUrl: string | null;
   verificationCode: string;
 }
@@ -41,8 +42,35 @@ function AppContent() {
   const [currentPage, setCurrentPage] = useState<AppPage>("login");
   const [resetEmail, setResetEmail] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
-  const printRef = useRef<HTMLDivElement>(null);
   const docRef = useRef<HTMLDivElement>(null);
+  // Used to prevent double pushState when restoring from popstate
+  const isRestoringRef = useRef(false);
+
+  // ── Browser History API: seed initial state
+  useEffect(() => {
+    window.history.replaceState({ currentPage, showPreview }, "");
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // ── Push a new history entry on every navigation change
+  useEffect(() => {
+    if (isRestoringRef.current) {
+      isRestoringRef.current = false;
+      return;
+    }
+    window.history.pushState({ currentPage, showPreview }, "");
+  }, [currentPage, showPreview]);
+
+  // ── Listen for mouse Back / Forward (and browser arrow keys)
+  useEffect(() => {
+    const handlePopState = (e: PopStateEvent) => {
+      if (!e.state) return;
+      isRestoringRef.current = true;
+      setCurrentPage(e.state.currentPage as AppPage);
+      setShowPreview(Boolean(e.state.showPreview));
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
 
   // Determine page based on auth state
   const getEffectivePage = (): AppPage => {
@@ -73,38 +101,23 @@ function AppContent() {
   };
 
   const handleDownloadPdf = async () => {
-    if (orderData && docRef.current) {
-      const country = getCountryById(orderData.country);
-      const safeName = `Court-Order_${country.nameEn}_${orderData.orderNo}`.replace(/[^a-zA-Z0-9_\-]/g, "_");
-      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-
-      if (isMobile) {
-        setIsGenerating(true);
-        try {
-          // html2pdf.js has no official TS types; cast via unknown to avoid errors
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const h2p = ((await import('html2pdf.js')) as any).default ?? (await import('html2pdf.js'));
-          const opt = {
-            margin: [8, 8, 8, 8],
-            filename: `${safeName}.pdf`,
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
-            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-          };
-          await h2p().set(opt).from(docRef.current).save();
-        } finally {
-          setIsGenerating(false);
-        }
+    if (!orderData) return;
+    const country = getCountryById(orderData.country);
+    const safeName = `Court-Order_${country.nameEn}_${orderData.orderNo}`.replace(/[^a-zA-Z0-9_\-]/g, "_");
+    setIsGenerating(true);
+    try {
+      if (docRef.current) {
+        await downloadElementAsPdf(docRef.current, safeName);
       } else {
-        const originalTitle = document.title;
         document.title = safeName;
-        setTimeout(() => {
-          window.print();
-          setTimeout(() => { document.title = originalTitle; }, 1000);
-        }, 100);
+        setTimeout(() => { window.print(); }, 100);
       }
-    } else {
-      setTimeout(() => { window.print(); }, 100);
+    } catch (err) {
+      console.error("PDF failed, falling back to print:", err);
+      // Always works as last resort
+      window.print();
+    } finally {
+      setIsGenerating(false);
     }
   };
 
@@ -200,10 +213,10 @@ function AppContent() {
             </div>
             <div>
               <h1 className="text-lg sm:text-2xl font-bold text-white tracking-wide leading-tight">
-                Facebook Post Removal —<br className="sm:hidden" /> Court Order Generator
+                GCS — Facebook Post Removal —<br className="sm:hidden" /> Court Order Generator
               </h1>
               <p className="text-blue-300 text-xs sm:text-sm mt-1">
-                ১০টি দেশের অফিসিয়াল সিলমোহর ও স্বাক্ষর সহ কোর্ট অর্ডার
+                ১৩টি দেশের অফিসিয়াল সিলমোহর ও স্বাক্ষর সহ কোর্ট অর্ডার
               </p>
             </div>
           </div>
@@ -283,8 +296,8 @@ function AppContent() {
 
             {/* Document Preview */}
             <div className="w-full pb-6 print:pb-0">
-              <div ref={printRef} className="w-full max-w-[210mm] mx-auto bg-white/5 p-2 sm:p-6 rounded-xl shadow-2xl backdrop-blur-sm print:bg-transparent print:p-0 print:shadow-none">
-                {/* docRef wraps only the clean document content for html2pdf (mobile) */}
+              <div className="w-full max-w-[210mm] mx-auto bg-white/5 p-2 sm:p-6 rounded-xl shadow-2xl backdrop-blur-sm print:bg-transparent print:p-0 print:shadow-none">
+                {/* docRef targets only the clean white document for html2canvas */}
                 <div ref={docRef}>
                   {orderData && <OrderDocument data={orderData} />}
                 </div>
@@ -295,8 +308,6 @@ function AppContent() {
       </main>
 
       <footer className="text-center py-6 px-4 text-blue-400/60 text-xs sm:text-sm leading-relaxed print:hidden">
-        <p>⚠️ এটি একটি নমুনা ডকুমেন্ট জেনারেটর — SAMPLE Document Generator</p>
-        <p className="mt-0.5">For demonstration purposes only.</p>
         <p className="mt-2 font-bold text-blue-400/80 tracking-wide uppercase text-[10px] sm:text-xs">
           © 2026 Garuda Cyber Shield. All Rights Reserved.
         </p>

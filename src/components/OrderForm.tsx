@@ -44,12 +44,14 @@ export default function OrderForm({ onGenerate, existingData }: OrderFormProps) 
   const handleChange = (field: keyof OrderData, value: any) => {
     setFormData((prev) => {
       const updated = { ...prev, [field]: value };
-      // When country changes, auto-fill officer info
+      // When country changes, auto-fill all country-specific header + officer fields
       if (field === "country") {
-        const countryInfo = getCountryById(value);
-        updated.officerName = countryInfo.officerName;
-        updated.officerDesignation = countryInfo.officerDesignation;
-        updated.department = countryInfo.departmentName;
+        const c = getCountryById(value);
+        updated.officerName = c.officerName;
+        updated.officerDesignation = c.officerDesignation;
+        updated.department = c.departmentName;
+        // reset court name so it reflects new country default
+        updated.courtName = "";
       }
       return updated;
     });
@@ -57,13 +59,12 @@ export default function OrderForm({ onGenerate, existingData }: OrderFormProps) 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Auto-fill officer data from country if empty
-    const countryInfo = getCountryById(formData.country);
+    const c = getCountryById(formData.country);
     const finalData = {
       ...formData,
-      officerName: formData.officerName || countryInfo.officerName,
-      officerDesignation: formData.officerDesignation || countryInfo.officerDesignation,
-      department: formData.department || countryInfo.departmentName,
+      officerName: formData.officerName || c.officerName,
+      officerDesignation: formData.officerDesignation || c.officerDesignation,
+      department: formData.department || c.departmentName,
     };
     onGenerate(finalData);
   };
@@ -132,25 +133,48 @@ export default function OrderForm({ onGenerate, existingData }: OrderFormProps) 
             </div>
           </div>
 
-          {/* Section: Court Details Upload/Input */}
+          {/* ===== DOCUMENT HEADER FIELDS ===== */}
           <div className="border-t border-slate-700/50 pt-5 mt-5">
-            <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
-              <span className="w-6 h-6 bg-purple-600 rounded-full flex items-center justify-center text-xs text-white">🏛️</span>
-              আদালতের তথ্য / Court Info
+            <h3 className="text-white font-semibold mb-1 flex flex-wrap items-center gap-2">
+              <span className="w-6 h-6 bg-purple-600 rounded-full flex items-center justify-center text-white text-sm">🏛️</span>
+              ডকুমেন্ট হেডার / Document Header
+              <span className="text-xs bg-purple-900/50 text-purple-300 px-2.5 py-1 rounded-full border border-purple-700/50">
+                Auto-filled from country — override here
+              </span>
             </h3>
+            <p className="text-slate-400 text-xs mb-4">Leave blank to use the country default shown as placeholder</p>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Field 1: Government Heading */}
               <div>
-                <label className="block text-blue-300 text-sm font-medium mb-1.5">আদালতের নাম / Court Name</label>
+                <label className="block text-blue-300 text-sm font-medium mb-1">আদালতের নাম / Court Name</label>
                 <input
                   type="text"
                   value={formData.courtName}
                   onChange={(e) => handleChange("courtName", e.target.value)}
-                  placeholder="Leave empty for default"
-                  className="w-full px-4 py-2.5 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  placeholder={selectedCountry.governmentNameLine1}
+                  className="w-full px-4 py-2.5 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
                 />
+                <p className="text-slate-500 text-[11px] mt-1 truncate">Default: {selectedCountry.governmentNameLine1}</p>
               </div>
+
+              {/* Field 3: Department Name */}
               <div>
-                <label className="block text-blue-300 text-sm font-medium mb-1.5">লোগো / Upload Logo</label>
+                <label className="block text-blue-300 text-sm font-medium mb-1">বিভাগ / Department Name</label>
+                <input
+                  type="text"
+                  value={formData.department}
+                  onChange={(e) => handleChange("department", e.target.value)}
+                  placeholder={selectedCountry.departmentName}
+                  className="w-full px-4 py-2.5 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                />
+                <p className="text-slate-500 text-[11px] mt-1 truncate">Default: {selectedCountry.departmentName}</p>
+              </div>
+
+
+              {/* Logo upload spans full width */}
+              <div className="md:col-span-2">
+                <label className="block text-blue-300 text-sm font-medium mb-1.5">অফিসিয়াল লোগো / Upload Logo (optional — replaces default seal)</label>
                 <div className="flex items-center gap-3">
                   <input
                     type="file"
@@ -167,7 +191,7 @@ export default function OrderForm({ onGenerate, existingData }: OrderFormProps) 
                         handleChange("logoUrl", null);
                       }
                     }}
-                    className="w-full text-slate-300 px-4 py-2 border border-slate-600 rounded-lg bg-slate-700/50 focus:outline-none transition-all file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500 cursor-pointer"
+                    className="w-full text-slate-300 px-4 py-2 border border-slate-600 rounded-lg bg-slate-700/50 focus:outline-none transition-all file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-purple-600 file:text-white hover:file:bg-purple-500 cursor-pointer"
                   />
                   {formData.logoUrl && (
                     <img src={formData.logoUrl} alt="Logo" className="w-10 h-10 object-contain rounded bg-white p-1" />
@@ -339,7 +363,7 @@ export default function OrderForm({ onGenerate, existingData }: OrderFormProps) 
                 Auto-filled from country
               </span>
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-blue-300 text-sm font-medium mb-1.5">নাম / Name</label>
                 <input
@@ -355,15 +379,6 @@ export default function OrderForm({ onGenerate, existingData }: OrderFormProps) 
                   type="text"
                   value={formData.officerDesignation || selectedCountry.officerDesignation}
                   onChange={(e) => handleChange("officerDesignation", e.target.value)}
-                  className="w-full px-4 py-2.5 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                />
-              </div>
-              <div>
-                <label className="block text-blue-300 text-sm font-medium mb-1.5">বিভাগ / Department</label>
-                <input
-                  type="text"
-                  value={formData.department || selectedCountry.departmentName}
-                  onChange={(e) => handleChange("department", e.target.value)}
                   className="w-full px-4 py-2.5 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                 />
               </div>

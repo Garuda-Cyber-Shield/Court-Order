@@ -8,17 +8,5 @@
     "status": "approved",
     "is_default_owner": 1,
     "created_at": "2026-03-31T18:08:56.322Z"
-  },
-  {
-    "id": 2,
-    "code_name": "Thhbdhasd",
-    "email": "abcd@gmail.com",
-    "password": "$2b$12$GapohHV4paddUMy0ngQXEOweQAJAtV5nOEs1vJKUwByRMQKGWudOy",
-    "role": "user",
-    "status": "approved",
-    "is_default_owner": 0,
-    "created_at": "2026-03-31T18:18:33.115Z",
-    "reset_requested": false,
-    "reset_approved": false
   }
 ]

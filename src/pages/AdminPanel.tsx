@@ -173,9 +173,10 @@ export default function AdminPanel({ onBack }: AdminPanelProps) {
       doc.setFont("helvetica", "normal");
       doc.text(`Generated: ${new Date().toLocaleString()}`, pageWidth / 2, 28, { align: "center" });
 
-      // Table header
+      // Column x-positions (mm): #, Code Name, Email, Role, Status
+      // Email gets 84mm — plenty of room for any Gmail address
       let y = 40;
-      const cols = [14, 55, 100, 140, 170];
+      const cols = [14, 28, 68, 152, 178];
       doc.setFontSize(10);
       doc.setFont("helvetica", "bold");
       doc.setFillColor(30, 41, 59);
@@ -199,8 +200,12 @@ export default function AdminPanel({ onBack }: AdminPanelProps) {
           doc.rect(10, y - 5, pageWidth - 20, 8, "F");
         }
         doc.text(String(i + 1), cols[0], y);
-        doc.text(u.code_name, cols[1], y);
-        doc.text(u.email, cols[2], y);
+        // Truncate code name if extremely long
+        const codeName = u.code_name.length > 16 ? u.code_name.substring(0, 14) + "…" : u.code_name;
+        doc.text(codeName, cols[1], y);
+        // Truncate email safely — 82mm / ~2.2mm per char ≈ 37 chars max
+        const email = u.email.length > 35 ? u.email.substring(0, 33) + "…" : u.email;
+        doc.text(email, cols[2], y);
         doc.text(u.role.toUpperCase(), cols[3], y);
         doc.text(u.status, cols[4], y);
         y += 8;

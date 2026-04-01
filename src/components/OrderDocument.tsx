@@ -101,14 +101,6 @@ export default function OrderDocument({ data }: Props) {
         fontFamily: "'Times New Roman', Times, serif",
       }}
     >
-      {/* Watermark */}
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.03] z-0 print:hidden">
-          <span className="text-[100px] font-black text-gray-900 rotate-[-35deg] whitespace-nowrap select-none">
-            SAMPLE DOCUMENT
-          </span>
-        </div>
-      </div>
 
       <div className="relative z-10 p-8 md:p-12 print:p-5">
         {/* Top Border Design */}
@@ -125,9 +117,6 @@ export default function OrderDocument({ data }: Props) {
               <h1 className="text-2xl md:text-3xl font-black text-gray-900 tracking-wider">
                 {data.courtName || country.governmentNameLine1}
               </h1>
-              <p className="text-sm text-gray-600 tracking-widest mt-0.5">
-                {country.governmentNameLine2}
-              </p>
             </div>
           </div>
 
@@ -136,7 +125,6 @@ export default function OrderDocument({ data }: Props) {
           <h2 className="text-lg font-bold text-gray-900 tracking-wide">
             {department}
           </h2>
-          <p className="text-gray-500 text-sm">{country.departmentNameEn}</p>
 
           <div className="bg-gradient-to-r from-transparent via-gray-300 to-transparent h-px my-4"></div>
 

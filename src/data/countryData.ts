@@ -36,10 +36,10 @@ export const countries: CountryInfo[] = [
     officerDesignation: "Director, Cyber Crime Unit",
     signatureText: "Md. Abdul Karim",
     legalRefs: [
-      "Information and Communication Technology Act, 2006 (as amended) — Sections 54, 56, 57",
-      "Digital Security Act, 2018 — Sections 25, 28, 29, 31",
-      "Bangladesh Telecommunication Regulation Act, 2001",
-      "Penal Code, 1860 — Sections 500, 501, 502",
+      "Cyber Protection Ordinance, 2025 — (Replaced DSA 2018)",
+      "Information and Communication Technology Act, 2006 (as amended 2013) — Sections 54, 56",
+      "Penal Code, 1860 — Sections 499, 500, 501 (Defamation)",
+      "Digital Personal Data Protection Act (Proposed) — Data Privacy Violations",
     ],
     sealColors: { primary: "#006a4e", secondary: "#f42a41", accent: "#006a4e" },
     sealTopText: "CYBER CRIME INVESTIGATION",
@@ -50,7 +50,7 @@ export const countries: CountryInfo[] = [
     directiveTimeUrgent: "48 Hours",
     directiveTimeCritical: "24 Hours",
     orderBodyText:
-      "Under the Information and Communication Technology Act, 2006 (as amended in 2013), and the Digital Security Act, 2018, the following Facebook post is hereby ordered to be removed. All relevant authorities and platform operators are directed to comply immediately.",
+      "Under the Cyber Protection Ordinance 2025 and the Information and Communication Technology Act, 2006 (as amended in 2013), the following Facebook post is hereby ordered to be removed. All relevant authorities and platform operators are directed to comply immediately.",
   },
   {
     id: "us",
@@ -312,6 +312,99 @@ export const countries: CountryInfo[] = [
     directiveTimeCritical: "24 Hours",
     orderBodyText:
       "Under the Online Safety Act 2021 and the Criminal Code Act 1995, the following Facebook post is hereby ordered for removal. All relevant platform operators and digital service providers are directed to comply with this notice.",
+  },
+
+  // ─── Brazil ───────────────────────────────────────────────────────────────
+  {
+    id: "br",
+    nameEn: "Brazil",
+    nameBn: "ব্রাজিল",
+    flag: "🇧🇷",
+    governmentNameLine1: "REPÚBLICA FEDERATIVA DO BRASIL",
+    governmentNameLine2: "MINISTÉRIO DA JUSTIÇA E SEGURANÇA PÚBLICA",
+    departmentName: "Polícia Federal — Delegacia de Crimes Cibernéticos",
+    departmentNameEn: "Federal Police — Cybercrime Division",
+    officerName: "Delegado Federal Carlos Eduardo Silva",
+    officerDesignation: "Diretor, Delegacia de Repressão a Crimes Cibernéticos",
+    signatureText: "Carlos Eduardo Silva",
+    legalRefs: [
+      "Marco Civil da Internet — Lei n° 12.965/2014, Arts. 19, 21",
+      "Lei Carolina Dieckmann — Lei n° 12.737/2012 (Crimes Informáticos)",
+      "Código Penal Brasileiro — Arts. 138, 139, 140 (Calúnia e Difamação)",
+      "Lei Geral de Proteção de Dados (LGPD) — Lei n° 13.709/2018",
+    ],
+    sealColors: { primary: "#009A44", secondary: "#FEDD00", accent: "#002776" },
+    sealTopText: "POLÍCIA FEDERAL",
+    sealBottomText: "★ REPÚBLICA FEDERATIVA DO BRASIL ★",
+    sealCenterText: "PF",
+    orderTitleText: "ORDEM DE REMOÇÃO — Conteúdo em Mídia Social",
+    directiveTimeNormal: "72 Horas",
+    directiveTimeUrgent: "48 Horas",
+    directiveTimeCritical: "24 Horas",
+    orderBodyText:
+      "Nos termos do Marco Civil da Internet (Lei n° 12.965/2014) e do Código Penal Brasileiro, fica determinada a remoção imediata da seguinte publicação no Facebook. Todos os operadores de plataforma e provedores de conexão à internet são obrigados a cumprir esta ordem.",
+  },
+
+  // ─── Kuwait ───────────────────────────────────────────────────────────────
+  {
+    id: "kw",
+    nameEn: "Kuwait",
+    nameBn: "কুয়েত",
+    flag: "🇰🇼",
+    governmentNameLine1: "دولة الكويت — STATE OF KUWAIT",
+    governmentNameLine2: "MINISTRY OF INTERIOR — وزارة الداخلية",
+    departmentName: "إدارة الجرائم المعلوماتية — Cybercrime Department",
+    departmentNameEn: "General Dept. of Criminal Investigation — MOI",
+    officerName: "Col. Abdullah Yusuf Al-Rashidi",
+    officerDesignation: "Director, Cybercrime Department — MOI Kuwait",
+    signatureText: "Col. Abdullah Al-Rashidi",
+    legalRefs: [
+      "Kuwait Law No. 63 of 2015 — Anti-Information Technology Crime Law",
+      "Penal Code of Kuwait — Arts. 208–213 (Defamation & Libel)",
+      "Kuwait Press Law No. 3 of 2006 — Online Publications",
+      "Telecommunications Law No. 36 of 2016 — Digital Services",
+    ],
+    sealColors: { primary: "#007A3D", secondary: "#CE1126", accent: "#000000" },
+    sealTopText: "CYBERCRIME DEPARTMENT — MOI",
+    sealBottomText: "★ دولة الكويت — STATE OF KUWAIT ★",
+    sealCenterText: "MOI",
+    orderTitleText: "أمر إزالة المحتوى — CONTENT REMOVAL ORDER",
+    directiveTimeNormal: "72 ساعة / 72 Hours",
+    directiveTimeUrgent: "48 ساعة / 48 Hours",
+    directiveTimeCritical: "24 ساعة / 24 Hours",
+    orderBodyText:
+      "بموجب القانون رقم 63 لسنة 2015 بشأن مكافحة جرائم تقنية المعلومات وقانون العقوبات الكويتي، يُصدر الأمر بإزالة المنشور التالي على فيسبوك. يُلزم جميع مشغلو المنصات ومزودو الخدمة بالامتثال الفوري لهذا الأمر. (Under Law No. 63/2015 on combating cybercrime, the following Facebook post is hereby ordered for immediate removal. All platform operators shall comply forthwith.)",
+  },
+
+  // ─── Netherlands ─────────────────────────────────────────────────────────
+  {
+    id: "nl",
+    nameEn: "Netherlands",
+    nameBn: "নেদারল্যান্ডস",
+    flag: "🇳🇱",
+    governmentNameLine1: "Koninkrijk der Nederlanden",
+    governmentNameLine2: "MINISTERIE VAN JUSTITIE EN VEILIGHEID",
+    departmentName: "Nationale Politie — Team High Tech Crime (THTC)",
+    departmentNameEn: "National High Tech Crime Unit (NHTCU)",
+    officerName: "Commissaris David van der Berg",
+    officerDesignation: "Teamleider, National High Tech Crime Unit",
+    signatureText: "David van der Berg",
+    legalRefs: [
+      "Wetboek van Strafrecht — Art. 138ab (Computervredebreuk / Hacking)",
+      "Wetboek van Strafrecht — Art. 261 (Smaad / Defamation)",
+      "Wetboek van Strafrecht — Art. 137c/d (Groepsbelediging / Hate Speech)",
+      "EU Digital Services Act (Verordening Digitale Diensten) — 2022/2065",
+    ],
+    sealColors: { primary: "#21468B", secondary: "#AE1C28", accent: "#21468B" },
+    sealTopText: "NATIONALE POLITIE — NHTCU",
+    sealBottomText: "★ KONINKRIJK DER NEDERLANDEN ★",
+    sealCenterText: "NL",
+    orderTitleText: "VERWIJDERINGSBEVEL — Sociale Media Publicatie",
+    directiveTimeNormal: "72 Uren",
+    directiveTimeUrgent: "48 Uren",
+    directiveTimeCritical: "24 Uren",
+    orderBodyText:
+      "Op grond van het Wetboek van Strafrecht (artikelen 261 en 137c) en de Europese Verordening Digitale Diensten (DSA 2022/2065), wordt hierbij bevolen de volgende Facebook-publicatie onmiddellijk te verwijderen. Alle betrokken platformoperators en internetaanbieders zijn verplicht aan dit verwijderingsbevel te voldoen.",
   },
 ];
 
