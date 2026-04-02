@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "code_name": "QuickSilver",
+    "email": "qu1ck51lv3r.g@gmail.com",
+    "password": "$2b$12$e8icGbrIXpwPiKxdv/hxiO5OWa5dW2fVTB1Xn7o.wLlb2O6SU5PM2",
+    "role": "owner",
+    "status": "approved",
+    "is_default_owner": 1,
+    "created_at": "2026-03-31T18:08:56.322Z"
+  },
+  {
+    "id": 2,
+    "code_name": "Marshall Garuda",
+    "email": "marshall.garuda7@gmail.com",
+    "password": "$2b$12$d5nkIL.W23deh1IcQYfyIOivARJHGyhiVMOyqOeHkeXZaofg8JaJK",
+    "role": "admin",
+    "status": "approved",
+    "is_default_owner": 0,
+    "created_at": "2026-04-01T18:37:31.677Z"
+  },
+  {
+    "id": 3,
+    "code_name": "Master",
+    "email": "master.garuda17@gmail.com",
+    "password": "$2b$12$RYVDZgKCBcPPeInLG3QwE.Chh71iRowYZxyZ7msyFhWPoPlcIvp/.",
+    "role": "admin",
+    "status": "approved",
+    "is_default_owner": 0,
+    "created_at": "2026-04-01T19:23:04.168Z"
+  },
+  {
+    "id": 4,
+    "code_name": "QUAD",
+    "email": "quadqu4d@gmail.com",
+    "password": "$2b$12$.xX1hqPq7T3yVbFwdAkgAeeVcLJ2KWeYEHF9OYspmJNeXPIo9JyJ6",
+    "role": "admin",
+    "status": "approved",
+    "is_default_owner": 0,
+    "created_at": "2026-04-02T01:56:15.167Z"
+  }
+]
