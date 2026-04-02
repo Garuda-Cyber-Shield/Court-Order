@@ -406,6 +406,70 @@ export const countries: CountryInfo[] = [
     orderBodyText:
       "Op grond van het Wetboek van Strafrecht (artikelen 261 en 137c) en de Europese Verordening Digitale Diensten (DSA 2022/2065), wordt hierbij bevolen de volgende Facebook-publicatie onmiddellijk te verwijderen. Alle betrokken platformoperators en internetaanbieders zijn verplicht aan dit verwijderingsbevel te voldoen.",
   },
+
+  // ─── Italy ───────────────────────────────────────────────────────────────────
+  {
+    id: "it",
+    nameEn: "Italy",
+    nameBn: "ইতালি",
+    flag: "🇮🇹",
+    governmentNameLine1: "REPUBBLICA ITALIANA",
+    governmentNameLine2: "MINISTERO DELL'INTERNO — POLIZIA POSTALE",
+    departmentName: "Polizia Postale e delle Comunicazioni",
+    departmentNameEn: "Postal Police — National Cybercrime Division",
+    officerName: "Commissario Capo Marco Rossi",
+    officerDesignation: "Direttore, Sezione Reati Informatici — CNAIPIC",
+    signatureText: "Commissario Marco Rossi",
+    legalRefs: [
+      "Codice Penale — Art. 595 (Diffamazione a mezzo Internet / Online Defamation)",
+      "Legge n. 547/1993 — Reati Informatici (Computer Crimes)",
+      "Legge n. 90/2024 — Cybersicurezza Nazionale (National Cybersecurity)",
+      "GDPR / Codice della Privacy D.Lgs. 196/2003 — Data Protection",
+      "EU Digital Services Act (DSA) Reg. 2022/2065 — Illegal Content Removal",
+    ],
+    sealColors: { primary: "#009246", secondary: "#CE2B37", accent: "#009246" },
+    sealTopText: "POLIZIA POSTALE — CNAIPIC",
+    sealBottomText: "★ REPUBBLICA ITALIANA ★",
+    sealCenterText: "RI",
+    orderTitleText: "ORDINE DI RIMOZIONE — Contenuto su Social Media",
+    directiveTimeNormal: "72 Ore",
+    directiveTimeUrgent: "48 Ore",
+    directiveTimeCritical: "24 Ore",
+    orderBodyText:
+      "Ai sensi del Codice Penale italiano (Art. 595), della Legge n. 547/1993 sui Reati Informatici, della Legge n. 90/2024 sulla Cybersicurezza e del Regolamento UE sui Servizi Digitali (DSA 2022/2065), si ordina la rimozione immediata del seguente post su Facebook. Tutti gli operatori di piattaforma e i fornitori di servizi digitali sono tenuti a conformarsi a questa disposizione.",
+  },
+
+  // ─── Singapore ───────────────────────────────────────────────────────────────
+  {
+    id: "sg",
+    nameEn: "Singapore",
+    nameBn: "সিঙ্গাপুর",
+    flag: "🇸🇬",
+    governmentNameLine1: "REPUBLIC OF SINGAPORE",
+    governmentNameLine2: "MINISTRY OF HOME AFFAIRS — SINGAPORE POLICE FORCE",
+    departmentName: "SPF Cybercrime Command (CC)",
+    departmentNameEn: "Singapore Police Force — Cybercrime Command",
+    officerName: "Superintendent David Lim Wei Ming",
+    officerDesignation: "Commander, Cybercrime Command — SPF",
+    signatureText: "David Lim Wei Ming",
+    legalRefs: [
+      "Protection from Online Falsehoods and Manipulation Act (POFMA) 2019",
+      "Online Criminal Harms Act (OCHA) 2024 — Stop Communication Direction",
+      "Computer Misuse Act (Cap. 50A) — Sections 3–9",
+      "Broadcasting Act — IMDA Code of Practice for Online Safety 2023",
+      "Personal Data Protection Act (PDPA) 2012 — Section 24",
+    ],
+    sealColors: { primary: "#C8102E", secondary: "#FFFFFF", accent: "#C8102E" },
+    sealTopText: "SINGAPORE POLICE FORCE",
+    sealBottomText: "★ REPUBLIC OF SINGAPORE ★",
+    sealCenterText: "SPF",
+    orderTitleText: "CONTENT REMOVAL DIRECTION — Social Media Post",
+    directiveTimeNormal: "72 Hours",
+    directiveTimeUrgent: "48 Hours",
+    directiveTimeCritical: "24 Hours",
+    orderBodyText:
+      "Pursuant to the Online Criminal Harms Act 2024 (Stop Communication Direction) and the Protection from Online Falsehoods and Manipulation Act (POFMA) 2019, the following Facebook post is hereby directed to be removed. All platform operators and internet intermediaries are directed to comply with this order immediately under penalty of law.",
+  },
 ];
 
 export function getCountryById(id: string): CountryInfo {

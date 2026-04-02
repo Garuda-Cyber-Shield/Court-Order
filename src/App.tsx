@@ -223,7 +223,7 @@ function AppContent() {
                 GCS — Facebook Post Removal —<br className="sm:hidden" /> Court Order Generator
               </h1>
               <p className="text-blue-300 text-xs sm:text-sm mt-1">
-                ১৩টি দেশের অফিসিয়াল সিলমোহর ও স্বাক্ষর সহ কোর্ট অর্ডার
+                ১৫টি দেশের অফিসিয়াল সিলমোহর ও স্বাক্ষর সহ কোর্ট অর্ডার
               </p>
             </div>
           </div>

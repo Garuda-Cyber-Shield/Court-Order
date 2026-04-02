@@ -70,6 +70,7 @@ export default function OrderForm({ onGenerate, existingData }: OrderFormProps) 
   };
 
   const reasons = [
+    // ── General Offence Categories ───────────────────────────────────────────
     "Harassment / Hate Speech",
     "Defamation / Libel",
     "Personal Data Leak / Privacy Violation",
@@ -79,6 +80,54 @@ export default function OrderForm({ onGenerate, existingData }: OrderFormProps) 
     "Obscene / Objectionable Content",
     "National Security Threat",
     "Cyberbullying / Cyberstalking",
+
+    // ── Violative Content — Hate & Incitement ────────────────────────────────
+    // Grounded in: EU DSA Art.16, UK Online Safety Act 2023, NetzDG §1, BD Cyber Protection Ordinance 2025
+    "Violative Content — Hate Speech & Incitement to Violence (EU DSA / NetzDG / OSA 2023)",
+    "Violative Content — Communal / Religious Hatred (Public Order Offence)",
+    "Violative Content — Racial / Ethnic Discrimination (Multi-Jurisdictional)",
+
+    // ── Violative Content — Defamation & Reputation ──────────────────────────
+    // Grounded in: IT Codice Penale Art.595, DE StGB §185-186, BD Penal Code §499-500, IN IPC §499-500, PL Kodeks §212
+    "Violative Content — Criminal Defamation / Online Libel (Cross-Border)",
+    "Violative Content — False Accusation / Malicious Allegation",
+
+    // ── Violative Content — Privacy & Data Violations ────────────────────────
+    // Grounded in: GDPR (EU/IT), PDPA (SG), DPDPA 2023 (IN), LGPD (BR), BDSG (DE), Privacy Act 1988 (AU)
+    "Violative Content — Doxxing / Personal Data Exposure (GDPR / PDPA / DPDPA)",
+    "Violative Content — Non-Consensual Intimate Images / NCII (Revenge Porn)",
+    "Violative Content — Unauthorized Data Disclosure (Privacy Law Breach)",
+
+    // ── Violative Content — Cyber Threats & Stalking ─────────────────────────
+    // Grounded in: US 18 U.S.C. §2261A, UK Malicious Communications Act, PL Kodeks Art.190a, SG OCHA 2024
+    "Violative Content — Threats of Violence / True Threats (Cyberstalking)",
+    "Violative Content — Aggravated Cyberbullying / Targeted Harassment",
+    "Violative Content — Extortion / Sextortion Threat",
+
+    // ── Violative Content — Fraud & Scams ────────────────────────────────────
+    // Grounded in: SG OCHA 2024, AU Criminal Code Act 1995, US CFAA 18 U.S.C. §1030, CA Criminal Code §380
+    "Violative Content — Online Scam / Fraud Promotion (OCHA / CFAA)",
+    "Violative Content — Phishing / Account Takeover Solicitation",
+    "Violative Content — Counterfeit Goods / Financial Fraud",
+
+    // ── Violative Content — Disinformation & Falsehoods ─────────────────────
+    // Grounded in: SG POFMA 2019, FR Loi Avia 2020, DE NetzDG, IN IT Rules 2021 Rule 3
+    "Violative Content — Online Falsehoods / Disinformation (POFMA / Loi Avia / NetzDG)",
+    "Violative Content — Manipulated Media / Deep Fake Content",
+    "Violative Content — State/Election Interference Propaganda",
+
+    // ── Violative Content — Security & Extremism ─────────────────────────────
+    // Grounded in: US CFAA, UK Computer Misuse Act 1990, SG Computer Misuse Act Cap.50A, IT Legge 90/2024
+    "Violative Content — Terrorist / Extremist Recruitment Content",
+    "Violative Content — National Security Breach (State Secrets)",
+    "Violative Content — Malware / Cyberattack Facilitation (Computer Misuse)",
+
+    // ── Violative Content — Child Safety ─────────────────────────────────────
+    // Grounded in: Universal — all supported jurisdictions
+    "Violative Content — Child Sexual Abuse Material (CSAM)",
+    "Violative Content — Child Grooming / Exploitation",
+
+    // ── Other ────────────────────────────────────────────────────────────────
     "Other / অন্যান্য",
   ];
 

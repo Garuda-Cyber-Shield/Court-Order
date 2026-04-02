@@ -177,6 +177,35 @@ export default function OfficialSeal({ country }: SealProps) {
           </g>
         );
 
+      case "it": // Italy — Stella d'Italia
+        return (
+          <g transform="translate(100,88)">
+             <polygon
+              points="0,-22 6,-8 21,-8 9,3 13,18 0,10 -13,18 -9,3 -21,-8 -6,-8"
+              fill="none" stroke={sealColors.primary} strokeWidth="1.8"
+            />
+            <path d="M-10,10 Q0,0 10,10" fill="none" stroke={sealColors.secondary} strokeWidth="1" opacity="0.4" />
+            <circle cx="0" cy="0" r="12" fill={sealColors.primary} opacity="0.05" />
+          </g>
+        );
+
+      case "sg": // Singapore — Crescent & 5 Stars
+        return (
+          <g transform="translate(100,88)">
+            {/* Crescent */}
+            <path d="M-12,-15 A15,15 0 1,0 -12,15 A12,12 0 1,1 -12,-15" fill={sealColors.primary} opacity="0.8" />
+            {/* 5 Stars in a circle */}
+            {Array.from({ length: 5 }).map((_, i) => {
+              const a = (i * 72 * Math.PI) / 180 - Math.PI / 6;
+              const x = 5 + Math.cos(a) * 8;
+              const y = Math.sin(a) * 8;
+              return (
+                <text key={i} x={x} y={y + 3} textAnchor="middle" fontSize="9" fill={sealColors.primary}>★</text>
+              );
+            })}
+          </g>
+        );
+
       default:
         return (
           <g transform="translate(100,88)">
