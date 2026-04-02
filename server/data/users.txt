@@ -43,12 +43,12 @@
     "id": 5,
     "code_name": "aas",
     "email": "abc@gmail.com",
-    "password": "$2b$12$/r97UeBClNKj.UhGlVVp/uXYqMGhxmpYqPz9avT4qzUX69sF2Zx9O",
+    "password": "$2b$12$aEiuzGY0Gq7k1KNN9BUITeDEcRDDIbUF/.zFAE6MWEBGwcem7Dv8W",
     "role": "user",
     "status": "approved",
     "is_default_owner": 0,
     "created_at": "2026-04-02T16:00:42.866Z",
-    "reset_requested": true,
-    "reset_approved": true
+    "reset_requested": false,
+    "reset_approved": false
   }
 ]
