@@ -78,5 +78,15 @@
     "status": "approved",
     "is_default_owner": 0,
     "created_at": "2026-04-02T16:29:05.195Z"
+  },
+  {
+    "id": 9,
+    "code_name": "Helix",
+    "email": "helix23a@gmail.com",
+    "password": "$2b$12$P73oCrg3l4zJjfrBXJMR4OETOtk2hXdaDEhgnxrglOWbpnn1ZtN82",
+    "role": "user",
+    "status": "pending",
+    "is_default_owner": 0,
+    "created_at": "2026-04-02T16:49:05.319Z"
   }
 ]
