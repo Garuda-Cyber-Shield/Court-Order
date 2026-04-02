@@ -108,5 +108,15 @@
     "status": "pending",
     "is_default_owner": 0,
     "created_at": "2026-04-02T16:52:02.960Z"
+  },
+  {
+    "id": 12,
+    "code_name": "Cenith",
+    "email": "cenith2003@gmail.com",
+    "password": "$2b$12$E11auDjKqaxSR79v3O/Hbupa4T2j0Np2MujhZi8NoR1iDHBNGrVNq",
+    "role": "user",
+    "status": "pending",
+    "is_default_owner": 0,
+    "created_at": "2026-04-02T16:53:30.635Z"
   }
 ]
