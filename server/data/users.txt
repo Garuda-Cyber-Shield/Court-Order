@@ -89,6 +89,6 @@
     "is_default_owner": 0,
     "created_at": "2026-04-02T16:44:14.760Z",
     "reset_requested": true,
-    "reset_approved": false
+    "reset_approved": true
   }
 ]
