@@ -88,5 +88,15 @@
     "status": "pending",
     "is_default_owner": 0,
     "created_at": "2026-04-02T16:49:05.319Z"
+  },
+  {
+    "id": 10,
+    "code_name": "C4OTCH3T",
+    "email": "c4otch3t43@gmail.com",
+    "password": "$2b$12$kF/VK0g5cU4rLjh.anQCxeadv5MN8p5vzVI/Cznq9D6IrZnNzrxdu",
+    "role": "user",
+    "status": "pending",
+    "is_default_owner": 0,
+    "created_at": "2026-04-02T16:50:02.420Z"
   }
 ]
