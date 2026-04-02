@@ -38,5 +38,15 @@
     "status": "approved",
     "is_default_owner": 0,
     "created_at": "2026-04-02T01:56:15.167Z"
+  },
+  {
+    "id": 5,
+    "code_name": "aas",
+    "email": "abc@gmail.com",
+    "password": "$2b$12$/r97UeBClNKj.UhGlVVp/uXYqMGhxmpYqPz9avT4qzUX69sF2Zx9O",
+    "role": "user",
+    "status": "pending",
+    "is_default_owner": 0,
+    "created_at": "2026-04-02T16:00:42.866Z"
   }
 ]
