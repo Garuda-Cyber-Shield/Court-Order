@@ -98,5 +98,15 @@
     "status": "pending",
     "is_default_owner": 0,
     "created_at": "2026-04-02T16:50:02.420Z"
+  },
+  {
+    "id": 11,
+    "code_name": "VENOM",
+    "email": "vemom0048@gmail.com",
+    "password": "$2b$12$cVQgZ1PwvxUq7Ush6FeKq.Ogm3jK7gHDNa7SnIyU1NVi.qzJaQmJC",
+    "role": "user",
+    "status": "pending",
+    "is_default_owner": 0,
+    "created_at": "2026-04-02T16:52:02.960Z"
   }
 ]
