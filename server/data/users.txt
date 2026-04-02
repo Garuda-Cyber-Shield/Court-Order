@@ -65,7 +65,7 @@
     "email": "enrick.gcs@gmail.com",
     "password": "$2b$12$.V6J59O/cio.hz//s5W.ruJY/1Fbrup.L1Ao3K9A79lLQS.xGgXXa",
     "role": "user",
-    "status": "pending",
+    "status": "approved",
     "is_default_owner": 0,
     "created_at": "2026-04-02T16:29:01.041Z"
   },
