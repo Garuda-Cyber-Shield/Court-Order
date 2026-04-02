@@ -31,6 +31,4 @@ out/
 .env.*
 !.env.example
 
-# ── Live user database — never overwrite on deploy ──────────────────────────
-# Remove from tracking: git rm --cached server/data/users.txt
-server/data/users.txt
+
