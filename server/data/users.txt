@@ -83,12 +83,12 @@
     "id": 9,
     "code_name": "ddd",
     "email": "aa@gmail.com",
-    "password": "$2b$12$N4w89Yx7db46oV5MzYQntOFa6cYW9vQesFnrWxj02hfwryLymLq3i",
+    "password": "$2b$12$ZE7UfQc7UzQqyHtXFxurgODYhhrPelVtyRCzeghCXStFBSDqCR3We",
     "role": "user",
     "status": "approved",
     "is_default_owner": 0,
     "created_at": "2026-04-02T16:44:14.760Z",
-    "reset_requested": true,
-    "reset_approved": true
+    "reset_requested": false,
+    "reset_approved": false
   }
 ]
