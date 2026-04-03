@@ -175,7 +175,7 @@
     "email": "vhagar197@gmail.com",
     "password": "$2b$12$.wFp77yNDUCg4YYwQO2w7u.XoBC92GoN3y5QZZ6jsKy1OVcLW8zJq",
     "role": "user",
-    "status": "pending",
+    "status": "approved",
     "is_default_owner": 0,
     "created_at": "2026-04-03T02:59:42.433Z"
   }
