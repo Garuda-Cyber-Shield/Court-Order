@@ -185,7 +185,7 @@
     "email": "a5hv01d.gcs@gmail.com",
     "password": "$2b$12$reF8GQH9LuM4FVueUwLjfeRRQs5hkUTTFkGBoCu8jOc5cf1eWcgXK",
     "role": "user",
-    "status": "pending",
+    "status": "approved",
     "is_default_owner": 0,
     "created_at": "2026-04-06T15:23:35.298Z"
   }
