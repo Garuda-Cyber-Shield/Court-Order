@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import { Tag, Mail, Lock, Eye, EyeOff, AlertTriangle, CheckCircle2 } from 'lucide-react';
 
 interface SignupPageProps {
   onSwitchToLogin: () => void;
@@ -113,7 +114,7 @@ export default function SignupPage({ onSwitchToLogin, onSignupSuccess, onBanned 
 
             {/* Code Name */}
             <div>
-              <label className="block text-blue-300 text-sm font-medium mb-2">🏷️ Code Name</label>
+              <label className="block text-blue-300 text-sm font-medium mb-2 flex items-center gap-1.5"><Tag className="w-4 h-4" /> Code Name</label>
               <input
                 type="text"
                 id="signup-codename"
@@ -127,7 +128,7 @@ export default function SignupPage({ onSwitchToLogin, onSignupSuccess, onBanned 
 
             {/* Official Gmail */}
             <div>
-              <label className="block text-blue-300 text-sm font-medium mb-2">📧 Official Gmail</label>
+              <label className="block text-blue-300 text-sm font-medium mb-2 flex items-center gap-1.5"><Mail className="w-4 h-4" /> Official Gmail</label>
               <input
                 type="email"
                 id="signup-email"
@@ -140,14 +141,14 @@ export default function SignupPage({ onSwitchToLogin, onSignupSuccess, onBanned 
               />
               {emailError && (
                 <p className="text-red-400 text-xs mt-1.5 flex items-center gap-1">
-                  <span>⚠️</span> {emailError}
+                  <AlertTriangle className="w-3 h-3" /> {emailError}
                 </p>
               )}
             </div>
 
             {/* Password */}
             <div>
-              <label className="block text-blue-300 text-sm font-medium mb-2">🔒 Password</label>
+              <label className="block text-blue-300 text-sm font-medium mb-2 flex items-center gap-1.5"><Lock className="w-4 h-4" /> Password</label>
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
@@ -164,12 +165,12 @@ export default function SignupPage({ onSwitchToLogin, onSignupSuccess, onBanned 
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
                 >
-                  {showPassword ? "🙈" : "👁️"}
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
               {passwordError && (
                 <p className="text-red-400 text-xs mt-1.5 flex items-center gap-1">
-                  <span>⚠️</span> {passwordError}
+                  <AlertTriangle className="w-3 h-3" /> {passwordError}
                 </p>
               )}
               {/* Password strength indicator */}
@@ -180,14 +181,14 @@ export default function SignupPage({ onSwitchToLogin, onSignupSuccess, onBanned 
                     <div className={`h-1 rounded-full flex-1 ${password.length >= 10 ? "bg-emerald-500" : "bg-slate-600"}`} />
                     <div className={`h-1 rounded-full flex-1 ${password.length >= 12 && /[!@#$%^&*]/.test(password) ? "bg-emerald-500" : "bg-slate-600"}`} />
                   </div>
-                  <span className="text-emerald-400 text-xs">✓ Valid</span>
+                  <span className="text-emerald-400 text-xs flex items-center gap-1"><CheckCircle2 className="w-3 h-3" /> Valid</span>
                 </div>
               )}
             </div>
 
             {/* Confirm Password */}
             <div>
-              <label className="block text-blue-300 text-sm font-medium mb-2">🔒 Confirm Password</label>
+              <label className="block text-blue-300 text-sm font-medium mb-2 flex items-center gap-1.5"><Lock className="w-4 h-4" /> Confirm Password</label>
               <input
                 type={showPassword ? "text" : "password"}
                 id="signup-confirm-password"
@@ -199,7 +200,7 @@ export default function SignupPage({ onSwitchToLogin, onSignupSuccess, onBanned 
               />
               {confirmPassword && confirmPassword !== password && (
                 <p className="text-red-400 text-xs mt-1.5 flex items-center gap-1">
-                  <span>⚠️</span> Passwords do not match
+                  <AlertTriangle className="w-3 h-3" /> Passwords do not match
                 </p>
               )}
             </div>

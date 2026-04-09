@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { OrderData } from "../App";
 import { countries, getCountryById } from "../data/countryData";
+import { FileText, Building2, User, Landmark, UserCheck } from 'lucide-react';
 
 interface OrderFormProps {
   onGenerate: (data: OrderData) => void;
@@ -139,7 +140,9 @@ export default function OrderForm({ onGenerate, existingData }: OrderFormProps) 
         {/* Form Header */}
         <div className="bg-gradient-to-r from-blue-800/80 to-indigo-800/80 px-5 sm:px-8 py-5 border-b border-blue-700/30">
           <h2 className="text-xl font-bold text-white flex items-center gap-3">
-            <span className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center text-sm">📝</span>
+            <span className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center text-sm">
+              <FileText className="w-4 h-4" />
+            </span>
             কোর্ট অর্ডার তথ্য পূরণ করুন / Fill Court Order Information
           </h2>
           <p className="text-blue-200/80 text-sm mt-1">দেশ সিলেক্ট করুন এবং ফর্ম পূরণ করুন — Select country & fill form</p>
@@ -172,10 +175,10 @@ export default function OrderForm({ onGenerate, existingData }: OrderFormProps) 
                 <p className="text-blue-300 text-xs sm:text-sm mt-0.5">{selectedCountry.governmentNameLine2}</p>
                 <div className="flex flex-col sm:flex-row justify-center sm:justify-start gap-2 sm:gap-4 mt-2 pt-2 border-t border-slate-600/50">
                   <p className="text-slate-400 text-xs flex items-center justify-center sm:justify-start gap-1">
-                    <span>🏛️</span> <span className="truncate">{selectedCountry.departmentName}</span>
+                    <Building2 className="w-3 h-3" /> <span className="truncate">{selectedCountry.departmentName}</span>
                   </p>
                   <p className="text-emerald-400 text-xs flex items-center justify-center sm:justify-start gap-1">
-                    <span>👤</span> <span className="truncate">{selectedCountry.officerName}</span>
+                    <User className="w-3 h-3" /> <span className="truncate">{selectedCountry.officerName}</span>
                   </p>
                 </div>
               </div>
@@ -185,7 +188,9 @@ export default function OrderForm({ onGenerate, existingData }: OrderFormProps) 
           {/* ===== DOCUMENT HEADER FIELDS ===== */}
           <div className="border-t border-slate-700/50 pt-5 mt-5">
             <h3 className="text-white font-semibold mb-1 flex flex-wrap items-center gap-2">
-              <span className="w-6 h-6 bg-purple-600 rounded-full flex items-center justify-center text-white text-sm">🏛️</span>
+              <span className="w-6 h-6 bg-purple-600 rounded-full flex items-center justify-center text-white text-sm">
+                <Landmark className="w-3.5 h-3.5" />
+              </span>
               ডকুমেন্ট হেডার / Document Header
               <span className="text-xs bg-purple-900/50 text-purple-300 px-2.5 py-1 rounded-full border border-purple-700/50">
                 Auto-filled from country — override here
@@ -438,12 +443,12 @@ export default function OrderForm({ onGenerate, existingData }: OrderFormProps) 
           <div className="pt-4">
             <button
               type="submit"
-              className="w-full py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-lg rounded-xl hover:from-blue-500 hover:to-indigo-500 transition-all shadow-xl hover:shadow-blue-500/30 flex items-center justify-center gap-3"
+              className="w-full py-3.5 px-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-sm sm:text-lg rounded-xl hover:from-blue-500 hover:to-indigo-500 transition-all shadow-xl hover:shadow-blue-500/30 flex items-center justify-center gap-2 sm:gap-3"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 sm:w-6 sm:h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              কোর্ট অর্ডার তৈরি করুন / Generate Court Order
+              <span className="text-center leading-tight">কোর্ট অর্ডার তৈরি করুন / Generate Court Order</span>
             </button>
           </div>
         </form>

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { KeyRound, XCircle, CheckCircle2, Mail, Send, Hourglass, RefreshCw, ArrowLeft } from 'lucide-react';
 
 const API_BASE = "/api";
 
@@ -84,11 +85,11 @@ export default function ForgotPasswordPage({ onBackToLogin, onResetApproved }: F
           {/* Header */}
           <div className="bg-gradient-to-r from-orange-800/80 to-amber-800/80 px-8 py-8 text-center border-b border-orange-700/30">
             <div className="w-16 h-16 bg-orange-600/30 rounded-2xl flex items-center justify-center mx-auto mb-4 backdrop-blur-sm border border-orange-500/30">
-              <svg className="w-8 h-8 text-orange-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
-              </svg>
+              <KeyRound className="w-8 h-8 text-orange-300" />
             </div>
-            <h1 className="text-2xl font-bold text-white tracking-wide">🔑 Forgot Password</h1>
+            <h1 className="text-2xl font-bold text-white tracking-wide flex items-center justify-center gap-2">
+              <KeyRound className="w-6 h-6" /> Forgot Password
+            </h1>
             <p className="text-orange-300/70 text-sm mt-2">
               {requestSent ? "Request submitted — check status below" : "Enter your email to request a password reset"}
             </p>
@@ -97,19 +98,19 @@ export default function ForgotPasswordPage({ onBackToLogin, onResetApproved }: F
           <div className="p-8 space-y-5">
             {error && (
               <div className="bg-red-900/40 border border-red-500/50 rounded-lg px-4 py-3 text-red-300 text-sm flex items-center gap-2">
-                <span>❌</span> {error}
+                <XCircle className="w-4 h-4 shrink-0" /> {error}
               </div>
             )}
             {message && (
               <div className="bg-emerald-900/40 border border-emerald-500/50 rounded-lg px-4 py-3 text-emerald-300 text-sm flex items-center gap-2">
-                <span>✅</span> {message}
+                <CheckCircle2 className="w-4 h-4 shrink-0" /> {message}
               </div>
             )}
 
             {!requestSent ? (
               <form onSubmit={handleSubmitRequest} className="space-y-5">
                 <div>
-                  <label className="block text-blue-300 text-sm font-medium mb-2">📧 Your Email</label>
+                  <label className="block text-blue-300 text-sm font-medium mb-2 flex items-center gap-1.5"><Mail className="w-4 h-4" /> Your Email</label>
                   <input
                     type="email"
                     value={email}
@@ -136,14 +137,14 @@ export default function ForgotPasswordPage({ onBackToLogin, onResetApproved }: F
                   {loading ? (
                     <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                   ) : (
-                    <>📨 Submit Reset Request</>
+                    <><Send className="w-5 h-5" /> Submit Reset Request</>
                   )}
                 </button>
               </form>
             ) : (
               <div className="space-y-4">
                 <div className="bg-slate-700/40 border border-slate-600/50 rounded-xl p-5 text-center">
-                  <div className="text-4xl mb-3">⏳</div>
+                  <Hourglass className="w-10 h-10 mx-auto mb-3 text-blue-400" />
                   <p className="text-white font-semibold mb-1">Waiting for Admin Approval</p>
                   <p className="text-slate-400 text-sm">Email: <span className="text-blue-300">{email}</span></p>
                 </div>
@@ -156,7 +157,7 @@ export default function ForgotPasswordPage({ onBackToLogin, onResetApproved }: F
                   {checking ? (
                     <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                   ) : (
-                    <>🔄 Check Approval Status</>
+                    <><RefreshCw className="w-5 h-5" /> Check Approval Status</>
                   )}
                 </button>
               </div>

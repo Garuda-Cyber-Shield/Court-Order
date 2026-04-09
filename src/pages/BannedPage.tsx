@@ -1,3 +1,5 @@
+import { Ban } from 'lucide-react';
+
 interface BannedPageProps {
   onBackToLogin: () => void;
 }
@@ -19,7 +21,7 @@ export default function BannedPage({ onBackToLogin }: BannedPageProps) {
           <div className="w-24 h-24 mx-auto mb-6 relative">
             <div className="absolute inset-0 bg-red-500/20 rounded-full animate-pulse" style={{ animationDuration: "2s" }} />
             <div className="relative w-full h-full bg-gradient-to-br from-red-600/30 to-red-800/30 rounded-full flex items-center justify-center border-2 border-red-500/50">
-              <span className="text-5xl">🚫</span>
+              <Ban className="w-12 h-12 text-red-500" />
             </div>
           </div>
 

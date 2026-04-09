@@ -287,12 +287,6 @@ export default function OfficialSeal({ country }: SealProps) {
         </text>
       </svg>
 
-      {/* SAMPLE watermark overlay */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <span className="text-red-500/20 font-black text-xl rotate-[-30deg] tracking-widest">
-          SAMPLE
-        </span>
-      </div>
     </div>
   );
 }

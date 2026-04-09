@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import { Mail, Lock, Eye, EyeOff, KeyRound, AlertCircle } from 'lucide-react';
 
 interface LoginPageProps {
   onSwitchToSignup: () => void;
@@ -75,7 +76,9 @@ export default function LoginPage({ onSwitchToSignup, onForgotPassword, onLoginS
             )}
 
             <div>
-              <label className="block text-blue-300 text-sm font-medium mb-2">📧 Email Address</label>
+              <label className="block text-blue-300 text-sm font-medium mb-2 flex items-center gap-1.5">
+                <Mail className="w-4 h-4" /> Email Address
+              </label>
               <input
                 type="email"
                 id="login-email"
@@ -88,7 +91,9 @@ export default function LoginPage({ onSwitchToSignup, onForgotPassword, onLoginS
             </div>
 
             <div>
-              <label className="block text-blue-300 text-sm font-medium mb-2">🔒 Password</label>
+              <label className="block text-blue-300 text-sm font-medium mb-2 flex items-center gap-1.5">
+                <Lock className="w-4 h-4" /> Password
+              </label>
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
@@ -104,7 +109,7 @@ export default function LoginPage({ onSwitchToSignup, onForgotPassword, onLoginS
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
                 >
-                  {showPassword ? "🙈" : "👁️"}
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
             </div>
@@ -130,9 +135,9 @@ export default function LoginPage({ onSwitchToSignup, onForgotPassword, onLoginS
               <button
                 type="button"
                 onClick={onForgotPassword}
-                className="text-orange-400 hover:text-orange-300 text-sm font-medium transition-colors"
+                className="text-orange-400 hover:text-orange-300 text-sm font-medium transition-colors flex items-center gap-1"
               >
-                🔑 Forgot Password?
+                <KeyRound className="w-4 h-4" /> Forgot Password?
               </button>
             </div>
 
@@ -148,7 +153,19 @@ export default function LoginPage({ onSwitchToSignup, onForgotPassword, onLoginS
                 </button>
               </p>
             </div>
+
+            {/* PWA Install Link - Small for Mobile */}
+            <div className="pt-4 text-center">
+              <button
+                type="button"
+                onClick={() => window.dispatchEvent(new Event('triggerPwaInstall'))}
+                className="text-[10px] sm:text-xs text-slate-500 hover:text-blue-400 transition-colors uppercase tracking-[0.2em] font-medium border-t border-slate-700/30 pt-4 w-full"
+              >
+                Install GCS App
+              </button>
+            </div>
           </form>
+
         </div>
       </div>
     </div>

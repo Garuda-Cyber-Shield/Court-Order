@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { jsPDF } from "jspdf";
 import { useAuth } from "../context/AuthContext";
+import { Users, User, Hourglass, CheckCircle2, Ban, ShieldAlert, Crown, Shield, Mail, Calendar, Trash2, Key, XSquare } from 'lucide-react';
+
 
 interface DBUser {
   id: number;
@@ -241,16 +243,16 @@ export default function AdminPanel({ onBack }: AdminPanelProps) {
   };
 
   const getRoleBadge = (role: string, isDefaultOwner: number) => {
-    if (isDefaultOwner) return <span className="px-2.5 py-1 text-xs font-bold rounded-full bg-yellow-500/20 text-yellow-300 border border-yellow-500/40">👑 OWNER</span>;
-    if (role === "owner") return <span className="px-2.5 py-1 text-xs font-bold rounded-full bg-yellow-500/20 text-yellow-300 border border-yellow-500/40">👑 OWNER</span>;
-    if (role === "admin") return <span className="px-2.5 py-1 text-xs font-bold rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/40">🛡️ ADMIN</span>;
-    return <span className="px-2.5 py-1 text-xs font-bold rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/40">👤 USER</span>;
+    if (isDefaultOwner) return <span className="px-2.5 py-1 text-xs font-bold rounded-full bg-yellow-500/20 text-yellow-300 border border-yellow-500/40 inline-flex items-center gap-1"><Crown className="w-3 h-3" /> OWNER</span>;
+    if (role === "owner") return <span className="px-2.5 py-1 text-xs font-bold rounded-full bg-yellow-500/20 text-yellow-300 border border-yellow-500/40 inline-flex items-center gap-1"><Crown className="w-3 h-3" /> OWNER</span>;
+    if (role === "admin") return <span className="px-2.5 py-1 text-xs font-bold rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/40 inline-flex items-center gap-1"><Shield className="w-3 h-3" /> ADMIN</span>;
+    return <span className="px-2.5 py-1 text-xs font-bold rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/40 inline-flex items-center gap-1"><User className="w-3 h-3" /> USER</span>;
   };
 
   const getStatusBadge = (status: string) => {
-    if (status === "approved") return <span className="px-2.5 py-1 text-xs font-bold rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">✅ Approved</span>;
-    if (status === "pending") return <span className="px-2.5 py-1 text-xs font-bold rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40">⏳ Pending</span>;
-    return <span className="px-2.5 py-1 text-xs font-bold rounded-full bg-red-500/20 text-red-300 border border-red-500/40">🚫 Banned</span>;
+    if (status === "approved") return <span className="px-2.5 py-1 text-xs font-bold rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 inline-flex items-center gap-1"><CheckCircle2 className="w-3 h-3" /> Approved</span>;
+    if (status === "pending") return <span className="px-2.5 py-1 text-xs font-bold rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 inline-flex items-center gap-1"><Hourglass className="w-3 h-3" /> Pending</span>;
+    return <span className="px-2.5 py-1 text-xs font-bold rounded-full bg-red-500/20 text-red-300 border border-red-500/40 inline-flex items-center gap-1"><Ban className="w-3 h-3" /> Banned</span>;
   };
 
   return (
@@ -267,7 +269,7 @@ export default function AdminPanel({ onBack }: AdminPanelProps) {
         <div className="max-w-7xl mx-auto px-4 py-5 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-purple-600/40 rounded-xl flex items-center justify-center">
-              <span className="text-2xl">🛡️</span>
+              <ShieldAlert className="w-6 h-6 text-purple-300" />
             </div>
             <div>
               <h1 className="text-xl font-bold text-white tracking-wide">Admin Panel</h1>
@@ -299,15 +301,16 @@ export default function AdminPanel({ onBack }: AdminPanelProps) {
 
       <main className="max-w-7xl mx-auto px-4 py-8">
         {/* Stats Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          {([["all", "Total Users", "👥", "from-blue-600/20 to-indigo-600/20", "border-blue-500/30"], ["pending", "Pending", "⏳", "from-amber-600/20 to-yellow-600/20", "border-amber-500/30"], ["approved", "Approved", "✅", "from-emerald-600/20 to-green-600/20", "border-emerald-500/30"], ["banned", "Banned", "🚫", "from-red-600/20 to-rose-600/20", "border-red-500/30"]] as const).map(([key, label, icon, bg, border]) => (
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+          {([["all", "Total Users", Users, "from-blue-600/20 to-indigo-600/20", "border-blue-500/30"], ["pending", "Pending", Hourglass, "from-amber-600/20 to-yellow-600/20", "border-amber-500/30"], ["approved", "Approved", CheckCircle2, "from-emerald-600/20 to-green-600/20", "border-emerald-500/30"]] as const).map(([key, label, IconComponent, bg, border]) => (
+
             <button
               key={key}
               onClick={() => setFilter(key)}
               className={`bg-gradient-to-br ${bg} backdrop-blur-sm rounded-xl p-4 border ${border} transition-all hover:scale-105 text-left ${filter === key ? "ring-2 ring-blue-400" : ""}`}
             >
               <div className="flex items-center justify-between">
-                <span className="text-2xl">{icon}</span>
+                <IconComponent className="w-6 h-6 shrink-0 opacity-80" />
                 <span className="text-3xl font-black text-white">{counts[key]}</span>
               </div>
               <p className="text-slate-300 text-sm mt-2 font-medium">{label}</p>
@@ -338,7 +341,7 @@ export default function AdminPanel({ onBack }: AdminPanelProps) {
           </div>
         ) : filteredUsers.length === 0 ? (
           <div className="text-center py-20 text-slate-400">
-            <span className="text-5xl block mb-4">📭</span>
+            <Ban className="w-12 h-12 mx-auto mb-4 opacity-50" />
             <p className="text-lg">No users found.</p>
           </div>
         ) : (
@@ -358,10 +361,10 @@ export default function AdminPanel({ onBack }: AdminPanelProps) {
                     </div>
                     <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 text-sm text-slate-400">
                       <span className="flex items-center gap-1.5 truncate">
-                        <span>📧</span> {u.email}
+                        <Mail className="w-4 h-4 shrink-0" /> {u.email}
                       </span>
                       <span className="flex items-center gap-1.5">
-                        <span>📅</span> {new Date(u.created_at).toLocaleDateString()}
+                        <Calendar className="w-4 h-4 shrink-0" /> {new Date(u.created_at).toLocaleDateString()}
                       </span>
                     </div>
                   </div>
@@ -374,7 +377,7 @@ export default function AdminPanel({ onBack }: AdminPanelProps) {
                         disabled={actionLoading === u.id}
                         className="px-4 py-2 bg-emerald-600 text-white text-sm font-semibold rounded-lg hover:bg-emerald-500 transition-all disabled:opacity-50 flex items-center gap-1.5"
                       >
-                        {actionLoading === u.id ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <>✅ Approve</>}
+                        {actionLoading === u.id ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <><CheckCircle2 className="w-4 h-4" /> Approve</>}
                       </button>
                     )}
 
@@ -387,9 +390,9 @@ export default function AdminPanel({ onBack }: AdminPanelProps) {
                         {actionLoading === u.id ? (
                           <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                         ) : u.role === "admin" ? (
-                          <>⬇️ Demote</>
+                          <>Demote</>
                         ) : (
-                          <>⬆️ Make Admin</>
+                          <>Make Admin</>
                         )}
                       </button>
                     )}
@@ -400,12 +403,12 @@ export default function AdminPanel({ onBack }: AdminPanelProps) {
                         disabled={actionLoading === u.id}
                         className="px-4 py-2 bg-red-600 text-white text-sm font-semibold rounded-lg hover:bg-red-500 transition-all disabled:opacity-50 flex items-center gap-1.5"
                       >
-                        {actionLoading === u.id ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <>🗑️ Ban/Delete</>}
+                        {actionLoading === u.id ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <><Trash2 className="w-4 h-4" /> Ban/Delete</>}
                       </button>
                     )}
 
                     {u.is_default_owner && (
-                      <span className="text-xs text-yellow-400/60 italic">🔒 Protected</span>
+                      <span className="text-xs text-yellow-400/60 italic flex items-center gap-1"><Shield className="w-3 h-3" /> Protected</span>
                     )}
                     {u.status === "banned" && !u.is_default_owner && (
                       <span className="text-xs text-red-400/60 italic">Account Banned</span>
@@ -414,25 +417,25 @@ export default function AdminPanel({ onBack }: AdminPanelProps) {
                     {/* Password Reset Request */}
                     {u.reset_requested && !u.reset_approved && (
                       <>
-                        <span className="px-2.5 py-1 text-xs font-bold rounded-full bg-orange-500/20 text-orange-300 border border-orange-500/40 animate-pulse">🔑 Reset Requested</span>
+                        <span className="px-2.5 py-1 text-xs font-bold rounded-full bg-orange-500/20 text-orange-300 border border-orange-500/40 animate-pulse inline-flex items-center gap-1"><Key className="w-3 h-3" /> Reset Requested</span>
                         <button
                           onClick={() => handleApproveReset(u.id)}
                           disabled={actionLoading === u.id}
                           className="px-3 py-1.5 bg-emerald-600 text-white text-xs font-semibold rounded-lg hover:bg-emerald-500 transition-all disabled:opacity-50"
                         >
-                          ✅ Approve Reset
+                          <CheckCircle2 className="w-3.5 h-3.5 inline mr-1" /> Approve Reset
                         </button>
                         <button
                           onClick={() => handleDenyReset(u.id)}
                           disabled={actionLoading === u.id}
                           className="px-3 py-1.5 bg-slate-600 text-white text-xs font-semibold rounded-lg hover:bg-slate-500 transition-all disabled:opacity-50"
                         >
-                          ❌ Deny
+                          <XSquare className="w-3.5 h-3.5 inline mr-1" /> Deny
                         </button>
                       </>
                     )}
                     {u.reset_approved && (
-                      <span className="px-2.5 py-1 text-xs font-bold rounded-full bg-green-500/20 text-green-300 border border-green-500/40">🔓 Reset Approved</span>
+                      <span className="px-2.5 py-1 text-xs font-bold rounded-full bg-green-500/20 text-green-300 border border-green-500/40 inline-flex items-center gap-1"><Key className="w-3 h-3" /> Reset Approved</span>
                     )}
                   </div>
                 </div>

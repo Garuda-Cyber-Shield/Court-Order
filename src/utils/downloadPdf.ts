@@ -102,15 +102,10 @@ function drawDefaultSeal(
   doc.setFontSize(4);
   doc.text(country.sealBottomText, cx, cy + R - 4, { align: "center" });
 
-  // SAMPLE watermark (light red)
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(7);
-  doc.setTextColor(255, 200, 200);
-  doc.text("SAMPLE", cx, cy + 2, { align: "center", angle: 30 });
 }
 
 // ── Generate a QR code image as a data URL for embedding in PDF ──────────
-function generateQRDataUrl(text: string, size: number): string {
+function generateQRDataUrl(text: string): string {
   // Strategy 1: Try to capture the live react-qr-code SVG from the DOM
   const qrSvg =
     (document.querySelector('svg[viewBox="0 0 256 256"]') as SVGElement | null) ??
@@ -124,18 +119,24 @@ function generateQRDataUrl(text: string, size: number): string {
   }
 
   // Strategy 2: Generate a deterministic QR-like pattern on canvas
+  // Use fixed integer dimensions to prevent sub-pixel anti-aliasing (which causes blur)
+  const moduleCount = 21;
+  const padding = 1;
+  const totalGrid = moduleCount + padding * 2; // 23
+  const cellW = 30; // crisp integer width per cell (high res)
+  const exactSize = totalGrid * cellW;
+
   const canvas = document.createElement("canvas");
-  canvas.width = size;
-  canvas.height = size;
+  canvas.width = exactSize;
+  canvas.height = exactSize;
   const ctx = canvas.getContext("2d")!;
+  ctx.imageSmoothingEnabled = false;
 
   ctx.fillStyle = "#ffffff";
-  ctx.fillRect(0, 0, size, size);
+  ctx.fillRect(0, 0, exactSize, exactSize);
   ctx.fillStyle = "#111827";
 
-  const moduleCount = 21;
-  const cellW = size / (moduleCount + 2);
-  const offset = cellW;
+  const offset = padding * cellW;
 
   // Finder patterns (the three large squares in QR corners)
   const drawFinder = (fx: number, fy: number) => {
@@ -418,7 +419,22 @@ async function buildCourtOrderPdfDirectly(data: OrderData, filename: string): Pr
   y += 16;
 
   // ── Main Order Body (bordered box) ────────────────────────────────────
-  ensureSpace(25);
+  // Calculate total height needed so the bounding box doesn't split across a page
+  doc.setFont("times", "normal");
+  doc.setFontSize(10);
+  let mainTextH = (doc.splitTextToSize(country.orderBodyText, cw - 10) as string[]).length * 4.8 + 3;
+  
+  doc.setFont("times", "bold");
+  mainTextH += 6 + (doc.splitTextToSize(`Reason: ${data.reason}`, cw - 10) as string[]).length * 4.8 + 2;
+  
+  if (data.additionalNotes) {
+    doc.setFont("times", "italic");
+    doc.setFontSize(9.5);
+    mainTextH += (doc.splitTextToSize(`Additional Notes: ${data.additionalNotes}`, cw - 18) as string[]).length * 4.5 + 4;
+  }
+  mainTextH += 7; // Bottom padding
+  ensureSpace(mainTextH);
+
   const bodyStartY = y - 3;
   doc.setDrawColor(150, 150, 150);
   doc.setLineWidth(0.3);
@@ -433,7 +449,6 @@ async function buildCourtOrderPdfDirectly(data: OrderData, filename: string): Pr
   doc.setFont("times", "bold");
   doc.setFontSize(10);
   doc.setTextColor(20, 20, 20);
-  ensureSpace(6);
   y = printWrapped(`Reason: ${data.reason}`, mx + 5, cw - 10, 4.8);
   y += 2;
 
@@ -525,7 +540,15 @@ async function buildCourtOrderPdfDirectly(data: OrderData, filename: string): Pr
   y += 7;
 
   // ── Legal References (bordered box) ───────────────────────────────────
-  ensureSpace(25);
+  doc.setFont("times", "normal");
+  doc.setFontSize(9);
+  let legalH = 18; // Heading + padding
+  country.legalRefs.forEach((ref) => {
+    legalH += (doc.splitTextToSize(`• ${ref}`, cw - 14) as string[]).length * 4.2 + 1.5;
+  });
+  legalH += 6;
+  ensureSpace(legalH);
+
   const legalStartY = y;
   doc.setFont("times", "bold");
   doc.setFontSize(10.5);
@@ -537,7 +560,6 @@ async function buildCourtOrderPdfDirectly(data: OrderData, filename: string): Pr
   doc.setFontSize(9);
   doc.setTextColor(40, 40, 40);
   country.legalRefs.forEach((ref) => {
-    ensureSpace(6);
     const refLines = doc.splitTextToSize(`• ${ref}`, cw - 14) as string[];
     for (const rl of refLines) {
       doc.text(rl, mx + 7, y);
@@ -552,7 +574,22 @@ async function buildCourtOrderPdfDirectly(data: OrderData, filename: string): Pr
   y += 8;
 
   // ── Directives (bordered box, thicker border) ────────────────────────
-  ensureSpace(35);
+  const directives = [
+    "The above-mentioned post must be immediately removed from the Facebook platform.",
+    "Upon completion of removal, this office must be notified in writing.",
+    "Legal action may be initiated against the concerned individual where applicable.",
+    `This order must be executed within ${directiveTime} of issuance.`,
+  ];
+
+  doc.setFont("times", "normal");
+  doc.setFontSize(9.5);
+  let dirH = 18; // Heading + padding
+  directives.forEach((d, i) => {
+    dirH += (doc.splitTextToSize(`${i + 1}. ${d}`, cw - 14) as string[]).length * 4.5 + 2.5;
+  });
+  dirH += 6;
+  ensureSpace(dirH);
+
   const dirStartY = y;
   doc.setFont("times", "bold");
   doc.setFontSize(10.5);
@@ -560,17 +597,11 @@ async function buildCourtOrderPdfDirectly(data: OrderData, filename: string): Pr
   doc.text("Directives:", mx + 5, y + 5);
   y += 11;
 
-  const directives = [
-    "The above-mentioned post must be immediately removed from the Facebook platform.",
-    "Upon completion of removal, this office must be notified in writing.",
-    "Legal action may be initiated against the concerned individual where applicable.",
-    `This order must be executed within ${directiveTime} of issuance.`,
-  ];
+  doc.setFont("times", "bold");
   doc.setFont("times", "normal");
   doc.setFontSize(9.5);
   doc.setTextColor(30, 30, 30);
   directives.forEach((d, i) => {
-    ensureSpace(6);
     const dLines = doc.splitTextToSize(`${i + 1}. ${d}`, cw - 14) as string[];
     for (const dl of dLines) {
       doc.text(dl, mx + 7, y);
@@ -755,7 +786,7 @@ async function buildCourtOrderPdfDirectly(data: OrderData, filename: string): Pr
 
   // Generate and embed real QR code image
   try {
-    const qrDataUrl = generateQRDataUrl(`VERIFICATION-CODE:${verificationCode}`, 512);
+    const qrDataUrl = generateQRDataUrl(`VERIFICATION-CODE:${verificationCode}`);
     // Center QR in the white container (20 - 18 = 2 -> padding 1)
     doc.addImage(qrDataUrl, "PNG", qrX + 1, qrY + 1, qrPdfSize, qrPdfSize);
   } catch {
