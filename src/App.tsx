@@ -193,27 +193,27 @@ function AppContent() {
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-3 flex-wrap justify-center">
-              <div className="bg-slate-800/60 border border-slate-700/50 rounded-lg px-3 py-2 flex items-center gap-2 text-sm">
-                <User className="w-4 h-4 text-blue-300" />
-                <span className="text-white font-semibold truncate max-w-[120px]">{user?.codeName}</span>
-                <span className={`px-2 py-0.5 text-[10px] font-bold rounded-full uppercase ${user?.role === "owner" ? "bg-yellow-500/20 text-yellow-300 border border-yellow-500/40" : user?.role === "admin" ? "bg-purple-500/20 text-purple-300 border border-purple-500/40" : "bg-blue-500/20 text-blue-300 border border-blue-500/40"}`}>
+            <div className="w-full sm:w-auto flex flex-wrap sm:flex-nowrap items-center justify-center gap-2 sm:gap-3 mt-3 sm:mt-0">
+              <div className="flex-1 sm:flex-none flex items-center justify-center bg-slate-800/60 border border-slate-700/50 rounded-lg px-2 py-2.5 sm:px-3 sm:py-2 gap-1.5 sm:gap-2 text-sm">
+                <User className="w-4 h-4 text-blue-300 shrink-0" />
+                <span className="text-white font-semibold truncate max-w-[90px] sm:max-w-[120px]">{user?.codeName}</span>
+                <span className={`px-1.5 sm:px-2 py-0.5 text-[10px] font-bold rounded-full uppercase shrink-0 ${user?.role === "owner" ? "bg-yellow-500/20 text-yellow-300 border border-yellow-500/40" : user?.role === "admin" ? "bg-purple-500/20 text-purple-300 border border-purple-500/40" : "bg-blue-500/20 text-blue-300 border border-blue-500/40"}`}>
                   {user?.role}
                 </span>
               </div>
               {isAdmin && (
                 <button
                   onClick={() => setCurrentPage("admin")}
-                  className="px-4 py-2.5 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-500 transition-all flex items-center gap-2 text-sm shadow-lg hover:shadow-purple-500/30"
+                  className="flex-1 sm:flex-none justify-center px-3 sm:px-4 py-2.5 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-500 transition-all flex items-center gap-2 text-sm shadow-lg hover:shadow-purple-500/30"
                 >
-                  <Shield className="w-4 h-4" /> Admin Panel
+                  <Shield className="w-4 h-4 shrink-0" /> Admin
                 </button>
               )}
               <button
                 onClick={handleLogout}
-                className="px-4 py-2.5 bg-red-600/80 text-white font-semibold rounded-lg hover:bg-red-500 transition-all flex items-center gap-2 text-sm shadow-lg"
+                className="w-full sm:w-auto justify-center px-4 py-2.5 bg-red-600/80 text-white font-semibold rounded-lg hover:bg-red-500 transition-all flex items-center gap-2 text-sm shadow-lg"
               >
-                <LogOut className="w-4 h-4" /> Logout
+                <LogOut className="w-4 h-4 shrink-0" /> Logout
               </button>
             </div>
           </div>

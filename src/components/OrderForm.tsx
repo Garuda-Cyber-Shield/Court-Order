@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { OrderData } from "../App";
 import { countries, getCountryById } from "../data/countryData";
-import { FileText, Building2, User, Landmark, UserCheck } from 'lucide-react';
+import { FileText, Landmark } from 'lucide-react';
 
 interface OrderFormProps {
   onGenerate: (data: OrderData) => void;
@@ -173,14 +173,7 @@ export default function OrderForm({ onGenerate, existingData }: OrderFormProps) 
               <div className="w-full mt-1 sm:mt-0">
                 <p className="text-white font-bold text-base sm:text-lg leading-tight">{selectedCountry.governmentNameLine1}</p>
                 <p className="text-blue-300 text-xs sm:text-sm mt-0.5">{selectedCountry.governmentNameLine2}</p>
-                <div className="flex flex-col sm:flex-row justify-center sm:justify-start gap-2 sm:gap-4 mt-2 pt-2 border-t border-slate-600/50">
-                  <p className="text-slate-400 text-xs flex items-center justify-center sm:justify-start gap-1">
-                    <Building2 className="w-3 h-3" /> <span className="truncate">{selectedCountry.departmentName}</span>
-                  </p>
-                  <p className="text-emerald-400 text-xs flex items-center justify-center sm:justify-start gap-1">
-                    <User className="w-3 h-3" /> <span className="truncate">{selectedCountry.officerName}</span>
-                  </p>
-                </div>
+
               </div>
             </div>
           </div>
