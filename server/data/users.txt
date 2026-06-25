@@ -105,13 +105,13 @@
     "id": 11,
     "code_name": "VENOM",
     "email": "vemom0048@gmail.com",
-    "password": "$2b$12$cVQgZ1PwvxUq7Ush6FeKq.Ogm3jK7gHDNa7SnIyU1NVi.qzJaQmJC",
+    "password": "$2b$12$gDeMxholfmlMaSBFQvZg0.I6IeVKUpozJReQ0Iw2/UNdTajR3bdNi",
     "role": "user",
     "status": "approved",
     "is_default_owner": 0,
     "created_at": "2026-04-02T16:52:02.960Z",
-    "reset_requested": true,
-    "reset_approved": true
+    "reset_requested": false,
+    "reset_approved": false
   },
   {
     "id": 12,
