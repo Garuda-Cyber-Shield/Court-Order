@@ -239,7 +239,7 @@
     "email": "r00tk1tc71@gmail.com",
     "password": "$2b$12$SZT6du6xlaDdXCHN6j5dheVlCAakEUiwiLYhRg8GWNH/g2IeZCZqO",
     "role": "user",
-    "status": "pending",
+    "status": "approved",
     "is_default_owner": 0,
     "created_at": "2026-07-01T17:35:10.812Z"
   },
