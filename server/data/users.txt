@@ -249,7 +249,7 @@
     "email": "photon01012001@gmail.com",
     "password": "$2b$12$lu9kFZTcanw3hfH.Kgar7ubvNBSi4FIlxrsWVtOu7h0ByHSvByN5u",
     "role": "user",
-    "status": "pending",
+    "status": "approved",
     "is_default_owner": 0,
     "created_at": "2026-07-01T17:40:00.328Z"
   }
