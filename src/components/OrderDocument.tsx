@@ -282,15 +282,17 @@ export default function OrderDocument({ data }: Props) {
                   {verificationCode}
                 </p>
               </div>
-              <div className="text-center">
+              <div className="text-center shrink-0">
                 {/* Real Live QR Code mapped to verification data */}
-                <div className="w-20 h-20 p-1 bg-white border border-gray-300 rounded-md flex items-center justify-center">
+                <div className="w-36 h-36 sm:w-40 sm:h-40 p-3 bg-white border border-gray-300 rounded-md flex items-center justify-center">
                   <QRCode
                     value={`VERIFICATION-CODE:${verificationCode}`}
-                    size={68}
+                    size={128}
                     bgColor="#ffffff"
                     fgColor="#111827"
                     level="M"
+                    aria-label={`Verification QR code for ${verificationCode}`}
+                    style={{ height: "auto", maxWidth: "100%", width: "100%" }}
                   />
                 </div>
                 <p className="text-[10px] text-gray-500 mt-1 font-semibold">SCAN TO VERIFY</p>
