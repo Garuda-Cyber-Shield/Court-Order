@@ -42,7 +42,14 @@ Run the following package install script to inject all React and Tailwind resour
 npm install
 ```
 
-### 3. Start the Development Environment
+### 3. Configure MongoDB
+
+Copy `.env.example` to `.env`, then set `MONGODB_URI`, `MONGODB_DB`, and `JWT_SECRET`.
+All member data is stored directly in MongoDB. For Vercel, add the same three variables in
+**Project Settings → Environment Variables**.
+Do not add the `.env` file or its secrets to Git.
+
+### 4. Start the Development Environment
 Run the lightweight Vite local development backend proxy server:
 ```bash
 npm run dev
@@ -50,7 +57,7 @@ npm run dev
 
 The terminal will return a local URL (usually http://localhost:5173). Open this URL in any modern browser to begin interacting with the tool immediately.
 
-### 4. Build for Production Environment
+### 5. Build for Production Environment
 To lock the application state into a single-file distributable or optimized static build, execute the following script:
 ```bash
 npm run build

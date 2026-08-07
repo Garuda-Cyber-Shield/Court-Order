@@ -29,6 +29,6 @@ build/
 out/
 .env
 .env.*
-!.env.example
+
 
 
