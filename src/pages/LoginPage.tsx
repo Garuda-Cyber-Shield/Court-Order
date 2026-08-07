@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { Mail, Lock, Eye, EyeOff, KeyRound, AlertCircle } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, KeyRound } from 'lucide-react';
 
 interface LoginPageProps {
   onSwitchToSignup: () => void;
@@ -14,6 +14,7 @@ export default function LoginPage({ onSwitchToSignup, onForgotPassword, onLoginS
   const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -28,12 +29,14 @@ export default function LoginPage({ onSwitchToSignup, onForgotPassword, onLoginS
     }
 
     setLoading(true);
-    const result = await login(email, password);
+    const result = await login(email, password, rememberMe);
     setLoading(false);
 
     if (result.success) {
+      localStorage.removeItem("pending_email");
       onLoginSuccess();
     } else if (result.errorType === "PENDING") {
+      localStorage.setItem("pending_email", email.trim().toLowerCase());
       onPending();
     } else if (result.errorType === "BANNED") {
       onBanned();
@@ -114,6 +117,28 @@ export default function LoginPage({ onSwitchToSignup, onForgotPassword, onLoginS
               </div>
             </div>
 
+            {/* Remember Me Checkbox & Forgot Password */}
+            <div className="flex items-center justify-between gap-2 pt-1 pb-1">
+              <label className="flex items-center gap-2 cursor-pointer text-slate-300 hover:text-white text-xs select-none">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="w-4 h-4 rounded border-slate-600 bg-slate-700/80 text-blue-600 focus:ring-blue-500 focus:ring-offset-slate-900 transition-all cursor-pointer accent-blue-600"
+                />
+                <span>Remember device for 90 days</span>
+              </label>
+
+              <button
+                type="button"
+                onClick={onForgotPassword}
+                className="text-orange-400 hover:text-orange-300 text-xs font-semibold transition-colors flex items-center gap-1 shrink-0"
+              >
+                <KeyRound className="w-3.5 h-3.5" />
+                <span>Forgot Password?</span>
+              </button>
+            </div>
+
             <button
               type="submit"
               disabled={loading}
@@ -130,16 +155,6 @@ export default function LoginPage({ onSwitchToSignup, onForgotPassword, onLoginS
                 </>
               )}
             </button>
-
-            <div className="flex items-center justify-between pt-1">
-              <button
-                type="button"
-                onClick={onForgotPassword}
-                className="text-orange-400 hover:text-orange-300 text-sm font-medium transition-colors flex items-center gap-1"
-              >
-                <KeyRound className="w-4 h-4" /> Forgot Password?
-              </button>
-            </div>
 
             <div className="text-center pt-2">
               <p className="text-slate-400 text-sm">

@@ -73,6 +73,7 @@ export default function SignupPage({ onSwitchToLogin, onSignupSuccess, onBanned 
     setLoading(false);
 
     if (result.success) {
+      localStorage.setItem("pending_email", email.trim().toLowerCase());
       onSignupSuccess();
     } else if (result.errorType === "BANNED") {
       onBanned();
