@@ -1,173 +1,244 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import 'dotenv/config';
+import { MongoClient } from 'mongodb';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const MONGODB_URI = process.env.MONGODB_URI;
+const MONGODB_DB = process.env.MONGODB_DB || 'gcs';
 
-const IS_VERCEL = !!process.env.VERCEL;
-const DATA_DIR = IS_VERCEL ? '/tmp' : path.join(__dirname, 'data');
-const USERS_FILE = path.join(DATA_DIR, 'users.txt');
-
-// GitHub Config (For Vercel Persistence)
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-const GITHUB_REPO = process.env.GITHUB_REPO; // e.g., "username/repo-name"
-const GITHUB_PATH = 'server/data/users.txt';
-const GITHUB_BRANCH = process.env.GITHUB_BRANCH || 'main';
-
-// Ensure data directory exists (Local)
-if (!IS_VERCEL && !fs.existsSync(DATA_DIR)) {
-  fs.mkdirSync(DATA_DIR, { recursive: true });
+if (!MONGODB_URI) {
+  throw new Error('MONGODB_URI is required. Add it to .env locally and to the Vercel environment variables.');
 }
 
-// Global cache to reduce API calls
-let cachedUsers = null;
-let lastUpdateSha = null;
+const client = new MongoClient(MONGODB_URI);
+let connectionPromise;
+let indexesPromise;
 
-async function getGithubFile() {
-  if (!GITHUB_TOKEN || !GITHUB_REPO) {
-    console.error('❌ GITHUB_TOKEN or GITHUB_REPO missing in env.');
-    return { content: '[]', sha: null };
+async function users() {
+  if (!connectionPromise) connectionPromise = client.connect();
+  await connectionPromise;
+
+  const collection = client.db(MONGODB_DB).collection('users');
+  if (!indexesPromise) {
+    indexesPromise = Promise.all([
+      collection.createIndex({ email: 1 }, { unique: true }),
+      collection.createIndex({ id: 1 }, { unique: true }),
+    ]);
   }
-  try {
-    const res = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${GITHUB_PATH}?ref=${GITHUB_BRANCH}`, {
-      headers: { 
-        'Authorization': `token ${GITHUB_TOKEN}`,
-        'Accept': 'application/vnd.github.v3+json'
-      }
-    });
-    if (!res.ok) {
-      if (res.status === 404) return { content: '[]', sha: null };
-      throw new Error(`GitHub Fetch Error: ${res.statusText}`);
-    }
-    const data = await res.json();
-    const content = Buffer.from(data.content, 'base64').toString('utf-8');
-    return { content, sha: data.sha };
-  } catch (err) {
-    console.error('❌ Failed to fetch from GitHub:', err.message);
-    return { content: '[]', sha: null };
-  }
+  await indexesPromise;
+  return collection;
 }
 
-async function updateGithubFile(content, sha) {
-  if (!GITHUB_TOKEN || !GITHUB_REPO) return;
-  try {
-    const bodyObj = {
-      message: 'Database Update [skip ci]',
-      content: Buffer.from(content).toString('base64'),
-      branch: GITHUB_BRANCH
-    };
-    if (sha) bodyObj.sha = sha;
-
-    const res = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${GITHUB_PATH}`, {
-      method: 'PUT',
-      headers: {
-        'Authorization': `token ${GITHUB_TOKEN}`,
-        'Content-Type': 'application/json',
+async function nextUserId() {
+  const collection = await users();
+  const highestUser = await collection.find().sort({ id: -1 }).limit(1).next();
+  const highestId = highestUser?.id || 0;
+  const counter = await client.db(MONGODB_DB).collection('counters').findOneAndUpdate(
+    { _id: 'users' },
+    [
+      {
+        $set: {
+          seq: {
+            $add: [
+              { $max: [{ $ifNull: ['$seq', highestId] }, highestId] },
+              1,
+            ],
+          },
+        },
       },
-      body: JSON.stringify(bodyObj)
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.message || 'GitHub Update Failed');
-    lastUpdateSha = data.content.sha;
-  } catch (err) {
-    console.error('❌ Failed to update GitHub:', err.message);
-    throw err; // MUST throw to fail the API request
-  }
+    ],
+    { upsert: true, returnDocument: 'after', includeResultMetadata: false },
+  );
+  return counter.seq;
 }
 
-async function readUsers() {
-  if (!IS_VERCEL && cachedUsers !== null) return cachedUsers;
+let reportLinksIndexesPromise;
 
-  if (IS_VERCEL) {
-    console.log('☁️ Fetching users from GitHub...');
-    const { content, sha } = await getGithubFile();
-    lastUpdateSha = sha;
-    try {
-      cachedUsers = JSON.parse(content);
-    } catch {
-      cachedUsers = [];
-    }
-    return cachedUsers;
-  } else {
-    // Local
-    if (!fs.existsSync(USERS_FILE)) fs.writeFileSync(USERS_FILE, '[]', 'utf-8');
-    try {
-      cachedUsers = JSON.parse(fs.readFileSync(USERS_FILE, 'utf-8'));
-    } catch {
-      cachedUsers = [];
-    }
-    return cachedUsers;
+async function reportLinks() {
+  if (!connectionPromise) connectionPromise = client.connect();
+  await connectionPromise;
+
+  const collection = client.db(MONGODB_DB).collection('report_links');
+  if (!reportLinksIndexesPromise) {
+    reportLinksIndexesPromise = collection.createIndex({ id: 1 }, { unique: true });
   }
+  await reportLinksIndexesPromise;
+  return collection;
 }
 
-async function writeUsers(users) {
-  cachedUsers = users;
-  const content = JSON.stringify(users, null, 2);
-
-  if (IS_VERCEL) {
-    console.log('☁️ Saving users to GitHub...');
-    // We need the latest SHA to update
-    if (!lastUpdateSha) {
-      const { sha } = await getGithubFile();
-      lastUpdateSha = sha;
-    }
-    await updateGithubFile(content, lastUpdateSha);
-  } else {
-    // Local
-    fs.writeFileSync(USERS_FILE, content, 'utf-8');
-  }
+async function nextReportLinkId() {
+  const collection = await reportLinks();
+  const highestItem = await collection.find().sort({ id: -1 }).limit(1).next();
+  const highestId = highestItem?.id || 0;
+  const counter = await client.db(MONGODB_DB).collection('counters').findOneAndUpdate(
+    { _id: 'report_links' },
+    [
+      {
+        $set: {
+          seq: {
+            $add: [
+              { $max: [{ $ifNull: ['$seq', highestId] }, highestId] },
+              1,
+            ],
+          },
+        },
+      },
+    ],
+    { upsert: true, returnDocument: 'after', includeResultMetadata: false },
+  );
+  return counter.seq;
 }
 
 const db = {
   async getAllUsers() {
-    return await readUsers();
+    return (await users()).find({}).sort({ id: 1 }).toArray();
   },
 
   async findByEmail(email) {
-    const users = await readUsers();
-    return users.find(u => u.email === email) || null;
+    return (await users()).findOne({ email: email.toLowerCase() });
   },
 
   async findById(id) {
-    const users = await readUsers();
-    return users.find(u => u.id === id) || null;
+    return (await users()).findOne({ id: Number(id) });
   },
 
   async createUser({ code_name, email, password, role = 'user', status = 'pending', is_default_owner = 0 }) {
-    const users = await readUsers();
-    const nextId = users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1;
     const user = {
-      id: nextId,
+      id: await nextUserId(),
       code_name,
-      email,
+      email: email.toLowerCase(),
       password,
       role,
       status,
       is_default_owner,
       created_at: new Date().toISOString(),
     };
-    users.push(user);
-    await writeUsers(users);
+    await (await users()).insertOne(user);
     return user;
   },
 
   async updateUser(id, updates) {
-    const users = await readUsers();
-    const idx = users.findIndex(u => u.id === id);
-    if (idx === -1) return null;
-    users[idx] = { ...users[idx], ...updates };
-    await writeUsers(users);
-    return users[idx];
+    return (await users()).findOneAndUpdate(
+      { id: Number(id) },
+      { $set: updates },
+      { returnDocument: 'after', includeResultMetadata: false },
+    );
   },
 
   async deleteUser(id) {
-    const users = await readUsers();
-    const filtered = users.filter(u => u.id !== id);
-    if (filtered.length === users.length) return false;
-    await writeUsers(filtered);
+    const result = await (await users()).deleteOne({ id: Number(id) });
+    return result.deletedCount === 1;
+  },
+
+  // ─── REPORT LINKS DB METHODS ──────────────────────
+  async getAllReportLinks() {
+    const col = await reportLinks();
+    let links = await col.find({}).sort({ order: 1, created_at: -1 }).toArray();
+
+    // Migration helper: ensure every document has a numeric 'order' field
+    let needsMigration = false;
+    links.forEach((item, index) => {
+      if (typeof item.order !== 'number') {
+        item.order = index;
+        needsMigration = true;
+      }
+    });
+
+    if (needsMigration) {
+      const bulkOps = links.map((item, index) => ({
+        updateOne: {
+          filter: { id: Number(item.id) },
+          update: { $set: { order: Number(index) } },
+        },
+      }));
+      if (bulkOps.length > 0) {
+        await col.bulkWrite(bulkOps);
+      }
+      links = await col.find({}).sort({ order: 1, created_at: -1 }).toArray();
+    }
+
+    return links;
+  },
+
+  async findReportLinkById(id) {
+    return (await reportLinks()).findOne({ id: Number(id) });
+  },
+
+  async findSimilarReportLink({ name, link, excludeId }) {
+    const col = await reportLinks();
+    const all = await col.find({}).toArray();
+
+    const normalizeUrl = (u) => {
+      if (!u) return '';
+      return u.toLowerCase().replace(/^https?:\/\//i, '').replace(/\/$/, '').trim();
+    };
+
+    const normName = name ? name.toLowerCase().trim() : '';
+    const normLink = normalizeUrl(link);
+
+    for (const item of all) {
+      if (excludeId && Number(item.id) === Number(excludeId)) continue;
+
+      const itemName = item.name ? item.name.toLowerCase().trim() : '';
+      const itemLink = normalizeUrl(item.link);
+
+      if (normName && itemName === normName) {
+        return { type: 'name', match: item };
+      }
+
+      if (normLink && itemLink === normLink) {
+        return { type: 'link', match: item };
+      }
+    }
+
+    return null;
+  },
+
+  async createReportLink({ name, vpn, link, created_by, order }) {
+    let linkOrder = order;
+    if (linkOrder === undefined) {
+      const highest = await (await reportLinks()).find({}).sort({ order: -1 }).limit(1).toArray();
+      linkOrder = highest.length > 0 && typeof highest[0].order === 'number' ? highest[0].order + 1 : Date.now();
+    }
+    const item = {
+      id: await nextReportLinkId(),
+      name,
+      vpn: vpn || 'None',
+      link,
+      order: linkOrder,
+      created_by: created_by || 'Admin',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+    await (await reportLinks()).insertOne(item);
+    return item;
+  },
+
+  async updateReportLink(id, updates) {
+    return (await reportLinks()).findOneAndUpdate(
+      { id: Number(id) },
+      { $set: { ...updates, updated_at: new Date().toISOString() } },
+      { returnDocument: 'after', includeResultMetadata: false },
+    );
+  },
+
+  async reorderReportLinks(orderedIds) {
+    const col = await reportLinks();
+    const bulkOps = orderedIds.map((id, index) => ({
+      updateOne: {
+        filter: { id: Number(id) },
+        update: { $set: { order: index, updated_at: new Date().toISOString() } },
+      },
+    }));
+    if (bulkOps.length > 0) {
+      await col.bulkWrite(bulkOps);
+    }
     return true;
+  },
+
+  async deleteReportLink(id) {
+    const result = await (await reportLinks()).deleteOne({ id: Number(id) });
+    return result.deletedCount === 1;
   },
 };
 
 export default db;
+
